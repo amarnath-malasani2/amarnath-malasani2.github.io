@@ -1,0 +1,134 @@
+/* Responsive Styles */
+
+/* For devices larger than 1200px */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* For laptops and small desktops */
+@media (max-width: 992px) {
+    .about-content {
+        flex-direction: column;
+    }
+    
+    .about-image {
+        margin-bottom: 30px;
+    }
+    
+    .about-text {
+        padding-left: 0;
+    }
+    
+    .skills-container {
+        flex-direction: column;
+    }
+    
+    .skill-category {
+        margin: 10px 0;
+    }
+}
+
+/* For tablets and small laptops */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        background: #fff;
+        width: 100%;
+        flex-direction: column;
+        box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+        transition: var(--transition);
+        padding: 20px 0;
+    }
+    
+    .nav-links.active {
+        left: 0;
+    }
+    
+    .nav-links li {
+        margin: 0;
+        padding: 15px 0;
+        text-align: center;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline:before {
+        left: 30px;
+    }
+    
+    .timeline-date {
+        width: auto;
+        position: static;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    
+    .timeline-item {
+        padding-left: 50px;
+    }
+    
+    #hero {
+        padding: 140px 0 80px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .contact-info {
+        flex-direction: column;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* For smartphones */
+@media (max-width: 576px) {
+    section {
+        padding: 60px 0;
+    }
+    
+    .about-image img {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    .document-manager, .notes-container {
+        padding: 15px;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+    
+    .project-links {
+        flex-direction: column;
+    }
+    
+    .project-links .btn {
+        margin-bottom: 10px;
+    }
+}

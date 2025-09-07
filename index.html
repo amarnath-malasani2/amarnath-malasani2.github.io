@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amarnath Malasani - DevOps & Software Development</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Amarnath Malasani</h1>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#documents">Documents</a></li>
+                <li><a href="#notes">Notes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>DevOps Engineer & Software Developer</h1>
+                <p>Building robust infrastructure and scalable applications</p>
+                <a href="#contact" class="btn">Contact Me</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="img/profile.jpg" alt="Amarnath Malasani">
+                </div>
+                <div class="about-text">
+                    <p>Welcome to my portfolio! I'm a passionate DevOps Engineer and Software Developer with expertise in building and maintaining scalable infrastructure and applications.</p>
+                    <p>I specialize in CI/CD pipelines, containerization, cloud infrastructure, and full-stack development.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="container">
+            <h2>Skills</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>DevOps</h3>
+                    <ul>
+                        <li>Docker</li>
+                        <li>Kubernetes</li>
+                        <li>Jenkins</li>
+                        <li>AWS/Azure/GCP</li>
+                        <li>Terraform</li>
+                        <li>CI/CD</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Programming</h3>
+                    <ul>
+                        <li>Python</li>
+                        <li>JavaScript</li>
+                        <li>Java</li>
+                        <li>Go</li>
+                        <li>Shell Scripting</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Tools & Others</h3>
+                    <ul>
+                        <li>Git</li>
+                        <li>Prometheus/Grafana</li>
+                        <li>ELK Stack</li>
+                        <li>RESTful APIs</li>
+                        <li>Agile Methodologies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>Kubernetes Deployment Automation</h3>
+                    <p>Developed a tool for automating Kubernetes deployments with GitOps principles.</p>
+                    <div class="project-tech">
+                        <span>Kubernetes</span>
+                        <span>Go</span>
+                        <span>ArgoCD</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn btn-sm">View Project</a>
+                        <a href="#" class="btn btn-sm btn-outline">GitHub</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Cloud Cost Optimization Tool</h3>
+                    <p>Built a dashboard for monitoring and optimizing cloud resource usage and costs.</p>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>AWS</span>
+                        <span>React</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn btn-sm">View Project</a>
+                        <a href="#" class="btn btn-sm btn-outline">GitHub</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>CI/CD Pipeline Framework</h3>
+                    <p>Created a reusable CI/CD pipeline framework for standardizing deployment processes.</p>
+                    <div class="project-tech">
+                        <span>Jenkins</span>
+                        <span>Groovy</span>
+                        <span>Docker</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn btn-sm">View Project</a>
+                        <a href="#" class="btn btn-sm btn-outline">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience">
+        <div class="container">
+            <h2>Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2023 - Present</div>
+                    <div class="timeline-content">
+                        <h3>Senior DevOps Engineer</h3>
+                        <h4>Tech Solutions Inc.</h4>
+                        <p>Leading containerization initiatives and implementing Infrastructure as Code practices. Reduced deployment time by 70% and improved system reliability.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2020 - 2023</div>
+                    <div class="timeline-content">
+                        <h3>DevOps Engineer</h3>
+                        <h4>Cloud Systems Ltd.</h4>
+                        <p>Implemented CI/CD pipelines and managed cloud infrastructure on AWS. Automated deployment processes and monitoring systems.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2018 - 2020</div>
+                    <div class="timeline-content">
+                        <h3>Software Developer</h3>
+                        <h4>Innovative Apps LLC</h4>
+                        <p>Developed backend services and APIs for web applications. Worked with microservices architecture and containerization.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="documents">
+        <div class="container">
+            <h2>Document Manager</h2>
+            <div class="auth-section" id="auth-section">
+                <h3>Sign in to manage documents</h3>
+                <div class="auth-buttons">
+                    <button id="signInBtn" class="btn">Sign In</button>
+                    <button id="signUpBtn" class="btn">Sign Up</button>
+                </div>
+                <div id="auth-form" class="auth-form hidden">
+                    <input type="email" id="email" placeholder="Email">
+                    <input type="password" id="password" placeholder="Password">
+                    <button id="authSubmitBtn" class="btn">Submit</button>
+                </div>
+            </div>
+            <div class="document-manager hidden" id="document-manager">
+                <div class="upload-area">
+                    <h3>Upload Documents</h3>
+                    <input type="file" id="fileUpload">
+                    <button id="uploadBtn" class="btn">Upload</button>
+                    <div id="uploadProgress" class="progress-bar"></div>
+                </div>
+                <div class="documents-list">
+                    <h3>Available Documents</h3>
+                    <ul id="documentsList">
+                        <!-- Documents will be listed here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="notes">
+        <div class="container">
+            <h2>Notes</h2>
+            <div class="notes-container hidden" id="notes-container">
+                <div class="new-note">
+                    <h3>Create New Note</h3>
+                    <input type="text" id="noteTitle" placeholder="Title">
+                    <textarea id="noteContent" placeholder="Content"></textarea>
+                    <button id="saveNote" class="btn">Save Note</button>
+                </div>
+                <div class="notes-list">
+                    <h3>Your Notes</h3>
+                    <div id="notesList">
+                        <!-- Notes will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Me</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:your.email@example.com">your.email@example.com</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-linkedin"></i>
+                    <a href="https://linkedin.com/in/your-profile" target="_blank">LinkedIn Profile</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-github"></i>
+                    <a href="https://github.com/amarnath-malasani2" target="_blank">GitHub Profile</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Amarnath Malasani. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/document-manager.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
