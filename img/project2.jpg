@@ -1,0 +1,10 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#21262d"/>
+  <circle cx="400" cy="250" r="150" fill="#30363d"/>
+  <path d="M320,250 L480,250 M400,170 L400,330" stroke="#58a6ff" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="320" cy="200" r="40" fill="#58a6ff" opacity="0.6"/>
+  <circle cx="480" cy="200" r="40" fill="#58a6ff" opacity="0.6"/>
+  <circle cx="320" cy="300" r="40" fill="#58a6ff" opacity="0.6"/>
+  <circle cx="480" cy="300" r="40" fill="#58a6ff" opacity="0.6"/>
+  <text x="400" y="90" font-family="Arial" font-size="24" fill="#58a6ff" text-anchor="middle">Container Orchestration Platform</text>
+</svg>
