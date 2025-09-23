@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - FreshGrocer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FFD700",
+                        header: "#0C2D57",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#121212",
+                        "content-light": "#f5f5f5",
+                        "content-dark": "#1E1E1E",
+                        "text-primary-light": "#0C2D57",
+                        "text-primary-dark": "#FFFFFF",
+                        "text-secondary-light": "#6b7280",
+                        "text-secondary-dark": "#9ca3af",
+                    },
+                    fontFamily: {
+                        display: ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .order-card {
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-processing {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-shipped {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .order-item {
+            transition: all 0.2s ease;
+        }
+
+        .order-item:hover {
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+
+        .tab-button {
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active {
+            background-color: #FFD700;
+            color: #0C2D57;
+            font-weight: 600;
+        }
+
+        .empty-orders {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+
+            .desktop-orders-layout {
+                display: grid;
+                grid-template-columns: 250px 1fr;
+                gap: 2rem;
+                align-items: start;
+            }
+
+            .desktop-orders-list {
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <!-- Desktop Layout -->
+    <div class="hidden md:block min-h-screen">
+        <header class="bg-[#0C2D57] text-white sticky top-0 z-10 shadow-md">
+            <div class="desktop-container">
+                <div class="flex h-20 items-center justify-between">
+                    <button class="text-white focus-visible:focus rounded-lg p-2 hover:bg-blue-900 transition-colors"
+                        onclick="window.history.back()" aria-label="Go back">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <h1 class="text-lg font-bold">My Orders</h1>
+                    <div class="w-8"></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="desktop-container py-8">
+            <div class="desktop-orders-layout">
+                <!-- Order Filters/Sidebar -->
+                <div class="bg-white dark:bg-content-dark rounded-xl shadow-sm p-6 sticky top-24">
+                    <h2 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-6">Filter Orders
+                    </h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">Order
+                                Status</h3>
+                            <div class="space-y-2">
+                                <button class="tab-button w-full text-left p-2 rounded-lg active" data-status="all">
+                                    All Orders
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-status="delivered">
+                                    Delivered
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-status="processing">
+                                    Processing
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-status="shipped">
+                                    Shipped
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-status="cancelled">
+                                    Cancelled
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">Time
+                                Period</h3>
+                            <div class="space-y-2">
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-period="last30">
+                                    Last 30 Days
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-period="last6">
+                                    Last 6 Months
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-period="2024">
+                                    2024
+                                </button>
+                                <button class="tab-button w-full text-left p-2 rounded-lg" data-period="all">
+                                    All Time
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders List Section -->
+                <div class="desktop-orders-list bg-content-light dark:bg-content-dark rounded-xl p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Your Orders
+                        </h2>
+                        <div class="relative">
+                            <select
+                                class="bg-background-light dark:bg-background-dark border border-gray-300 dark:border-gray-600 rounded-lg py-2 pl-3 pr-10 text-text-primary-light dark:text-text-primary-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>Sort by: Recent</option>
+                                <option>Sort by: Oldest</option>
+                                <option>Sort by: Price: High to Low</option>
+                                <option>Sort by: Price: Low to High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="orders-list-desktop" class="space-y-4">
+                        <!-- Orders will be dynamically inserted here -->
+                    </div>
+
+                    <div id="empty-orders-message-desktop" class="empty-orders hidden">
+                        <span
+                            class="material-symbols-outlined text-6xl text-text-secondary-light dark:text-text-secondary-dark mb-4">
+                            receipt_long
+                        </span>
+                        <h2 class="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">No
+                            orders yet</h2>
+                        <p class="text-text-secondary-light dark:text-text-secondary-dark text-lg">Start shopping to see
+                            your orders here</p>
+                        <button
+                            class="mt-6 bg-primary text-header font-bold py-3 px-8 rounded-lg hover:bg-opacity-90 transition-colors text-lg"
+                            onclick="window.location.href='../login/7-Homepage.html'">
+                            Start Shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Layout -->
+    <div class="block md:hidden">
+        <div class="max-w-md mx-auto min-h-screen flex flex-col">
+            <header class="bg-[#0C2D57] text-white sticky top-0 z-10 shadow-md">
+                <div class="container mx-auto flex items-center justify-between px-4 py-4">
+                    <button class="text-white focus-visible:focus rounded-lg p-2 hover:bg-blue-900 transition-colors"
+                        onclick="window.history.back()" aria-label="Go back">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <h1 class="text-lg font-bold">My Orders</h1>
+                    <div class="w-8"></div>
+                </div>
+            </header>
+
+            <main class="flex-grow bg-content-light dark:bg-content-dark p-4 overflow-y-auto">
+                <!-- Mobile Tabs -->
+                <div class="flex overflow-x-auto mb-4 pb-2 space-x-2">
+                    <button class="tab-button flex-shrink-0 px-4 py-2 rounded-full active" data-status="all">
+                        All
+                    </button>
+                    <button class="tab-button flex-shrink-0 px-4 py-2 rounded-full" data-status="delivered">
+                        Delivered
+                    </button>
+                    <button class="tab-button flex-shrink-0 px-4 py-2 rounded-full" data-status="processing">
+                        Processing
+                    </button>
+                    <button class="tab-button flex-shrink-0 px-4 py-2 rounded-full" data-status="shipped">
+                        Shipped
+                    </button>
+                    <button class="tab-button flex-shrink-0 px-4 py-2 rounded-full" data-status="cancelled">
+                        Cancelled
+                    </button>
+                </div>
+
+                <div id="orders-list-mobile" class="space-y-4">
+                    <!-- Orders will be dynamically inserted here -->
+                </div>
+
+                <div id="empty-orders-message-mobile" class="empty-orders hidden">
+                    <span
+                        class="material-symbols-outlined text-6xl text-text-secondary-light dark:text-text-secondary-dark mb-4">
+                        receipt_long
+                    </span>
+                    <h2 class="text-xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">No orders
+                        yet</h2>
+                    <p class="text-text-secondary-light dark:text-text-secondary-dark text-center px-4">Start shopping
+                        to see your orders here</p>
+                    <button
+                        class="mt-4 bg-primary text-header font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors"
+                        onclick="window.location.href='../login/7-Homepage.html'">
+                        Start Shopping
+                    </button>
+                </div>
+            </main>
+
+            <footer
+                class="bg-background-light dark:bg-background-dark p-4 sticky bottom-0 border-t border-gray-200 dark:border-gray-700">
+                <!-- Footer icons removed as requested -->
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Sample orders data
+        const orders = [
+            {
+                id: "ORD-123456",
+                date: "2024-03-15",
+                status: "delivered",
+                total: 1141,
+                items: [
+                    { name: "Organic Bananas", quantity: 1, price: 149, image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Avocados", quantity: 2, price: 330, image: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Strawberries", quantity: 1, price: 240, image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" }
+                ],
+                deliveryDate: "2024-03-16",
+                address: "123 Elm Street, Apt 4B, Mumbai, Maharashtra 400001"
+            },
+            {
+                id: "ORD-123457",
+                date: "2024-03-10",
+                status: "processing",
+                total: 789,
+                items: [
+                    { name: "Fresh Apples", quantity: 1, price: 330, image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Carrots", quantity: 1, price: 459, image: "https://images.unsplash.com/photo-1445282768818-728615cc910a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" }
+                ],
+                deliveryDate: "2024-03-12",
+                address: "123 Elm Street, Apt 4B, Mumbai, Maharashtra 400001"
+            },
+            {
+                id: "ORD-123458",
+                date: "2024-03-05",
+                status: "shipped",
+                total: 1520,
+                items: [
+                    { name: "Organic Bananas", quantity: 2, price: 149, image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Avocados", quantity: 1, price: 330, image: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Strawberries", quantity: 2, price: 240, image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Fresh Apples", quantity: 1, price: 330, image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" }
+                ],
+                deliveryDate: "2024-03-07",
+                address: "123 Elm Street, Apt 4B, Mumbai, Maharashtra 400001"
+            },
+            {
+                id: "ORD-123459",
+                date: "2024-02-28",
+                status: "cancelled",
+                total: 650,
+                items: [
+                    { name: "Carrots", quantity: 1, price: 459, image: "https://images.unsplash.com/photo-1445282768818-728615cc910a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+                    { name: "Broccoli", quantity: 1, price: 191, image: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" }
+                ],
+                deliveryDate: "2024-03-01",
+                address: "123 Elm Street, Apt 4B, Mumbai, Maharashtra 400001"
+            }
+        ];
+
+        // Format currency for Indian Rupees
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-IN', options);
+        }
+
+        // Get status badge class
+        function getStatusClass(status) {
+            switch (status) {
+                case 'delivered': return 'status-delivered';
+                case 'processing': return 'status-processing';
+                case 'shipped': return 'status-shipped';
+                case 'cancelled': return 'status-cancelled';
+                default: return 'status-processing';
+            }
+        }
+
+        // Get status text
+        function getStatusText(status) {
+            switch (status) {
+                case 'delivered': return 'Delivered';
+                case 'processing': return 'Processing';
+                case 'shipped': return 'Shipped';
+                case 'cancelled': return 'Cancelled';
+                default: return 'Processing';
+            }
+        }
+
+        // Filter orders by status
+        function filterOrders(status) {
+            if (status === 'all') return orders;
+            return orders.filter(order => order.status === status);
+        }
+
+        // Render orders for desktop
+        function renderDesktopOrders(status = 'all') {
+            const ordersContainer = document.getElementById('orders-list-desktop');
+            const emptyMessage = document.getElementById('empty-orders-message-desktop');
+            const filteredOrders = filterOrders(status);
+
+            if (filteredOrders.length === 0) {
+                ordersContainer.innerHTML = '';
+                emptyMessage.classList.remove('hidden');
+                return;
+            }
+
+            emptyMessage.classList.add('hidden');
+            ordersContainer.innerHTML = '';
+
+            filteredOrders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-card bg-background-light dark:bg-background-dark p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700';
+                orderElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Order Placed</p>
+                            <p class="font-semibold text-text-primary-light dark:text-text-primary-dark">${formatDate(order.date)}</p>
+                        </div>
+                        <div>
+                            <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Total</p>
+                            <p class="font-bold text-text-primary-light dark:text-text-primary-dark">${formatCurrency(order.total)}</p>
+                        </div>
+                        <div>
+                            <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm">Order #</p>
+                            <p class="font-semibold text-text-primary-light dark:text-text-primary-dark">${order.id}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <span class="status-badge ${getStatusClass(order.status)}">${getStatusText(order.status)}</span>
+                        ${order.status === 'delivered' ? `<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">Delivered on ${formatDate(order.deliveryDate)}</p>` : ''}
+                        ${order.status === 'shipped' ? `<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">Expected delivery: ${formatDate(order.deliveryDate)}</p>` : ''}
+                    </div>
+                    
+                    <div class="space-y-3 mb-4">
+                        ${order.items.map(item => `
+                            <div class="order-item flex items-center p-2 rounded-lg">
+                                <img alt="${item.name}" class="w-12 h-12 rounded-lg object-cover" src="${item.image}" />
+                                <div class="ml-3 flex-grow">
+                                    <p class="font-medium text-text-primary-light dark:text-text-primary-dark">${item.name}</p>
+                                    <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Qty: ${item.quantity}</p>
+                                </div>
+                                <p class="font-medium text-text-primary-light dark:text-text-primary-dark">${formatCurrency(item.price * item.quantity)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <button class="text-primary font-semibold hover:underline" onclick="viewOrderDetails('${order.id}')">
+                            View Details
+                        </button>
+                        <div class="space-x-2">
+                            ${order.status === 'delivered' ? `
+                                <button class="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                    Reorder
+                                </button>
+                                <button class="px-4 py-2 bg-primary text-header rounded-lg hover:bg-opacity-90 transition-colors">
+                                    Rate & Review
+                                </button>
+                            ` : ''}
+                            ${order.status === 'processing' ? `
+                                <button class="px-4 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors">
+                                    Cancel Order
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                ordersContainer.appendChild(orderElement);
+            });
+        }
+
+        // Render orders for mobile
+        function renderMobileOrders(status = 'all') {
+            const ordersContainer = document.getElementById('orders-list-mobile');
+            const emptyMessage = document.getElementById('empty-orders-message-mobile');
+            const filteredOrders = filterOrders(status);
+
+            if (filteredOrders.length === 0) {
+                ordersContainer.innerHTML = '';
+                emptyMessage.classList.remove('hidden');
+                return;
+            }
+
+            emptyMessage.classList.add('hidden');
+            ordersContainer.innerHTML = '';
+
+            filteredOrders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-card bg-background-light dark:bg-background-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700';
+                orderElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <p class="text-text-secondary-light dark:text-text-secondary-dark text-xs">Order #${order.id}</p>
+                            <p class="font-semibold text-text-primary-light dark:text-text-primary-dark text-sm">${formatDate(order.date)}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="status-badge ${getStatusClass(order.status)}">${getStatusText(order.status)}</span>
+                            <p class="font-bold text-text-primary-light dark:text-text-primary-dark mt-1">${formatCurrency(order.total)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        ${order.items.slice(0, 2).map(item => `
+                            <div class="order-item flex items-center p-2 rounded-lg">
+                                <img alt="${item.name}" class="w-10 h-10 rounded-lg object-cover" src="${item.image}" />
+                                <div class="ml-2 flex-grow">
+                                    <p class="font-medium text-text-primary-light dark:text-text-primary-dark text-sm">${item.name}</p>
+                                    <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Qty: ${item.quantity}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                        ${order.items.length > 2 ? `<p class="text-center text-text-secondary-light dark:text-text-secondary-dark text-sm mt-1">+${order.items.length - 2} more items</p>` : ''}
+                    </div>
+                    
+                    <div class="flex justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+                        <button class="text-primary font-semibold text-sm hover:underline" onclick="viewOrderDetails('${order.id}')">
+                            View Details
+                        </button>
+                        <div class="space-x-2">
+                            ${order.status === 'delivered' ? `
+                                <button class="px-3 py-1.5 text-xs border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                    Reorder
+                                </button>
+                            ` : ''}
+                            ${order.status === 'processing' ? `
+                                <button class="px-3 py-1.5 text-xs border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors">
+                                    Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                ordersContainer.appendChild(orderElement);
+            });
+        }
+
+        // View order details
+        function viewOrderDetails(orderId) {
+            // In a real app, this would redirect to an order details page
+            alert(`Viewing details for order: ${orderId}`);
+            // window.location.href = `order-details.html?id=${orderId}`;
+        }
+
+        // Setup tab functionality
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove active class from all buttons in the same container
+                    const parent = this.closest('div');
+                    parent.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    // Get the status filter
+                    const status = this.getAttribute('data-status');
+
+                    // Render orders with the selected filter
+                    if (window.innerWidth >= 768) {
+                        renderDesktopOrders(status);
+                    } else {
+                        renderMobileOrders(status);
+                    }
+                });
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.innerWidth >= 768) {
+                renderDesktopOrders();
+            } else {
+                renderMobileOrders();
+            }
+
+            setupTabs();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768) {
+                renderDesktopOrders();
+            } else {
+                renderMobileOrders();
+            }
+        });
+    </script>
+</body>
+
+</html>

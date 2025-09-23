@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Add Money to Wallet</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFD700",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0C2D57",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+
+        /* Accessibility improvements */
+        .focus-visible:focus {
+            outline: 2px solid #FFD700;
+            outline-offset: 2px;
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Error message animations */
+        .error-enter {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .error-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 0.3s ease-out;
+        }
+
+        .error-exit {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .error-exit-active {
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.3s ease-in;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body class="font-display bg-background-light dark:bg-zinc-900">
+    <div class="flex flex-col h-screen">
+        <header class="bg-background-dark text-white p-4">
+            <div class="container mx-auto flex items-center justify-between">
+                <button class="text-white focus-visible:focus rounded-lg p-2 hover:bg-blue-900 transition-colors"
+                    onclick="window.location.href='../login/7-Homepage.html'" aria-label="Go back to home">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="text-lg font-bold">Add Money to Wallet</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+        <main
+            class="flex-grow p-4 bg-background-light dark:bg-zinc-900 text-background-dark dark:text-background-light">
+            <div class="text-center py-6">
+                <p class="text-sm text-zinc-500 dark:text-zinc-400">Current Wallet Balance</p>
+                <p class="text-4xl font-bold mt-2">₹570.00</p>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Quick Add Amounts</h2>
+                    <div class="grid grid-cols-3 gap-3" role="group" aria-label="Quick amount selection">
+                        <button type="button" onclick="setAmount(100)" aria-label="Add ₹100 to wallet"
+                            class="amount-btn py-4 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-background-dark dark:text-background-light font-semibold hover:bg-primary hover:text-background-dark transition-all duration-200 transform hover:scale-105 active:scale-95 focus-visible:focus border-2 border-transparent">
+                            <div class="text-lg font-bold">₹100</div>
+                            <div class="text-xs opacity-70 mt-1">Quick top-up</div>
+                        </button>
+                        <button type="button" onclick="setAmount(500)" aria-label="Add ₹500 to wallet - Most popular"
+                            class="amount-btn py-4 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-background-dark dark:text-background-light font-semibold hover:bg-primary hover:text-background-dark transition-all duration-200 transform hover:scale-105 active:scale-95 focus-visible:focus border-2 border-transparent">
+                            <div class="text-lg font-bold">₹500</div>
+                            <div class="text-xs opacity-70 mt-1">Most popular</div>
+                        </button>
+                        <button type="button" onclick="setAmount(1000)" aria-label="Add ₹1000 to wallet - Best value"
+                            class="amount-btn py-4 px-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-background-dark dark:text-background-light font-semibold hover:bg-primary hover:text-background-dark transition-all duration-200 transform hover:scale-105 active:scale-95 focus-visible:focus border-2 border-transparent">
+                            <div class="text-lg font-bold">₹1000</div>
+                            <div class="text-xs opacity-70 mt-1">Best value</div>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
+                        for="custom-amount">Enter Custom Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-zinc-500 text-lg"
+                            aria-hidden="true">₹</span>
+                        <input
+                            class="w-full pl-8 pr-4 py-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 border-2 border-transparent focus:ring-2 focus:ring-primary focus:border-primary text-background-dark dark:text-background-light placeholder-zinc-400 dark:placeholder-zinc-500 text-lg focus-visible:focus"
+                            id="custom-amount" placeholder="Enter amount" type="number" min="1" max="50000"
+                            inputmode="numeric" aria-label="Enter custom amount in rupees"
+                            aria-describedby="amount-help" />
+                    </div>
+                    <p id="amount-help" class="text-xs text-zinc-500 dark:text-zinc-400 mt-2">Minimum: ₹1 • Maximum:
+                        ₹50,000</p>
+                    <div id="amount-error" class="text-xs text-red-500 mt-1 hidden" role="alert"></div>
+                </div>
+                <div>
+                    <h2 class="text-lg font-semibold my-4">Payment Methods</h2>
+                    <div class="space-y-3" role="group" aria-label="Payment method selection">
+                        <button type="button" onclick="selectPaymentMethod('card')"
+                            aria-label="Select Credit/Debit Card payment method"
+                            class="payment-method-btn w-full flex items-center p-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-left hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all duration-200 border-2 border-transparent focus-visible:focus">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-4">
+                                <span
+                                    class="material-symbols-outlined text-blue-600 dark:text-blue-400">credit_card</span>
+                            </div>
+                            <div class="flex-grow">
+                                <span class="font-medium text-gray-800 dark:text-gray-200">Credit/Debit Card</span>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Visa, MasterCard, AMEX</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span
+                                    class="material-symbols-outlined text-zinc-400 dark:text-zinc-500">arrow_forward_ios</span>
+                                <div
+                                    class="ml-2 w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center selection-indicator">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-primary hidden selected-dot"
+                                        aria-hidden="true"></div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="selectPaymentMethod('upi')"
+                            aria-label="Select UPI payment method"
+                            class="payment-method-btn w-full flex items-center p-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-left hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all duration-200 border-2 border-transparent focus-visible:focus">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center mr-4">
+                                <span
+                                    class="material-symbols-outlined text-purple-600 dark:text-purple-400">payments</span>
+                            </div>
+                            <div class="flex-grow">
+                                <span class="font-medium text-gray-800 dark:text-gray-200">UPI Payment</span>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Google Pay, PhonePe, Paytm</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span
+                                    class="material-symbols-outlined text-zinc-400 dark:text-zinc-500">arrow_forward_ios</span>
+                                <div
+                                    class="ml-2 w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center selection-indicator">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-primary hidden selected-dot"
+                                        aria-hidden="true"></div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="p-4 bg-background-light dark:bg-zinc-900">
+            <button id="proceed-button" onclick="proceedToPay()" aria-describedby="proceed-status"
+                class="w-full bg-primary text-background-dark font-bold py-4 rounded-lg text-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus-visible:focus transform hover:scale-[1.02] active:scale-[0.98]">
+                <span class="inline-flex items-center">
+                    <span id="proceed-text">Enter Amount</span>
+                    <span id="proceed-spinner" class="ml-2 spinner hidden">
+                        <span class="material-symbols-outlined">refresh</span>
+                    </span>
+                </span>
+            </button>
+            <div id="proceed-status" class="sr-only" aria-live="polite"></div>
+        </footer>
+    </div>
+
+    <script>
+        let selectedAmount = 0;
+        let selectedPaymentMethod = '';
+        let isProcessing = false;
+
+        function setAmount(amount) {
+            selectedAmount = amount;
+            document.getElementById('custom-amount').value = amount;
+            clearAmountError();
+
+            // Remove previous selection styling from all amount buttons
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-background-dark', 'ring-2', 'ring-primary');
+                btn.classList.add('bg-zinc-100', 'dark:bg-zinc-800', 'text-background-dark', 'dark:text-background-light');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+
+            // Add selection styling to clicked button - use currentTarget for reliability
+            const clickedBtn = event.currentTarget;
+            clickedBtn.classList.remove('bg-zinc-100', 'dark:bg-zinc-800');
+            clickedBtn.classList.add('bg-primary', 'text-background-dark', 'ring-2', 'ring-primary');
+            clickedBtn.setAttribute('aria-pressed', 'true');
+
+            // Announce selection for screen readers
+            announceToScreenReader(`₹${amount} selected`);
+
+            // Update proceed button
+            updateProceedButton();
+        }
+
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+
+            // Remove previous selection styling from all payment method buttons
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('bg-yellow-50', 'dark:bg-yellow-900/20', 'border-primary', 'ring-2', 'ring-primary/20');
+                btn.classList.add('bg-zinc-100', 'dark:bg-zinc-800', 'border-transparent');
+                btn.setAttribute('aria-pressed', 'false');
+
+                // Hide selection dot
+                const dot = btn.querySelector('.selected-dot');
+                if (dot) dot.classList.add('hidden');
+
+                // Reset selection indicator border
+                const indicator = btn.querySelector('.selection-indicator');
+                if (indicator) {
+                    indicator.classList.remove('border-primary');
+                    indicator.classList.add('border-gray-300', 'dark:border-gray-600');
+                }
+            });
+
+            // Add selection styling to clicked button - use currentTarget for reliability
+            const clickedButton = event.currentTarget;
+            clickedButton.classList.remove('bg-zinc-100', 'dark:bg-zinc-800', 'border-transparent');
+            clickedButton.classList.add('bg-yellow-50', 'dark:bg-yellow-900/20', 'border-primary', 'ring-2', 'ring-primary/20');
+            clickedButton.setAttribute('aria-pressed', 'true');
+
+            // Show selection dot
+            const selectedDot = clickedButton.querySelector('.selected-dot');
+            if (selectedDot) selectedDot.classList.remove('hidden');
+
+            // Update selection indicator
+            const selectedIndicator = clickedButton.querySelector('.selection-indicator');
+            if (selectedIndicator) {
+                selectedIndicator.classList.remove('border-gray-300', 'dark:border-gray-600');
+                selectedIndicator.classList.add('border-primary');
+            }
+
+            // Announce selection for screen readers
+            const methodName = method === 'card' ? 'Credit/Debit Card' : 'UPI Payment';
+            announceToScreenReader(`${methodName} selected`);
+
+            // Update proceed button
+            updateProceedButton();
+        }
+
+        function updateProceedButton() {
+            const customAmount = document.getElementById('custom-amount').value;
+            const amount = customAmount || selectedAmount;
+            const proceedBtn = document.getElementById('proceed-button');
+            const proceedText = document.getElementById('proceed-text');
+
+            if (amount && amount > 0 && selectedPaymentMethod) {
+                proceedText.textContent = `Pay ₹${formatCurrency(amount)}`;
+                proceedBtn.disabled = false;
+                proceedBtn.classList.remove('opacity-50');
+            } else if (amount && amount > 0) {
+                proceedText.textContent = 'Select Payment Method';
+                proceedBtn.disabled = true;
+                proceedBtn.classList.add('opacity-50');
+            } else {
+                proceedText.textContent = 'Enter Amount';
+                proceedBtn.disabled = true;
+                proceedBtn.classList.add('opacity-50');
+            }
+        }
+
+        function validateAmount(amount) {
+            if (!amount || amount <= 0) {
+                showAmountError('Please enter an amount');
+                return false;
+            }
+            if (amount < 1) {
+                showAmountError('Minimum amount is ₹1');
+                return false;
+            }
+            if (amount > 50000) {
+                showAmountError('Maximum amount is ₹50,000');
+                return false;
+            }
+            clearAmountError();
+            return true;
+        }
+
+        function showAmountError(message) {
+            const errorDiv = document.getElementById('amount-error');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            errorDiv.setAttribute('aria-live', 'polite');
+        }
+
+        function clearAmountError() {
+            const errorDiv = document.getElementById('amount-error');
+            errorDiv.classList.add('hidden');
+            errorDiv.textContent = '';
+        }
+
+        function proceedToPay() {
+            if (isProcessing) return;
+
+            const customAmount = document.getElementById('custom-amount').value;
+            const amount = customAmount || selectedAmount;
+
+            if (!validateAmount(amount)) {
+                return;
+            }
+
+            if (!selectedPaymentMethod) {
+                showErrorMessage('Please select a payment method');
+                return;
+            }
+
+            // Show loading state
+            isProcessing = true;
+            const proceedBtn = document.getElementById('proceed-button');
+            const proceedText = document.getElementById('proceed-text');
+            const proceedSpinner = document.getElementById('proceed-spinner');
+
+            proceedText.textContent = 'Processing...';
+            proceedSpinner.classList.remove('hidden');
+            proceedBtn.disabled = true;
+
+            // Announce to screen readers
+            announceToScreenReader('Processing payment, please wait');
+
+            // Simulate loading and redirect
+            setTimeout(() => {
+                window.location.href = `payment_confirmation.html?amount=${amount}&method=${selectedPaymentMethod}`;
+            }, 1000);
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN').format(amount);
+        }
+
+        function announceToScreenReader(message) {
+            const statusDiv = document.getElementById('proceed-status');
+            statusDiv.textContent = message;
+        }
+
+        function showErrorMessage(message) {
+            let errorDiv = document.getElementById('error-message');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'error-message';
+                errorDiv.className = 'fixed top-4 left-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50 transform -translate-y-full transition-transform duration-300 flex items-center';
+                errorDiv.setAttribute('role', 'alert');
+                errorDiv.setAttribute('aria-live', 'assertive');
+
+                const icon = document.createElement('span');
+                icon.className = 'material-symbols-outlined mr-2';
+                icon.textContent = 'error';
+                errorDiv.appendChild(icon);
+
+                const text = document.createElement('span');
+                text.className = 'flex-grow';
+                errorDiv.appendChild(text);
+
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '<span class="material-symbols-outlined">close</span>';
+                closeBtn.className = 'ml-2 hover:bg-red-600 rounded p-1';
+                closeBtn.setAttribute('aria-label', 'Close error message');
+                closeBtn.onclick = () => {
+                    errorDiv.classList.add('-translate-y-full');
+                };
+                errorDiv.appendChild(closeBtn);
+
+                document.body.appendChild(errorDiv);
+            }
+
+            errorDiv.querySelector('span:not(.material-symbols-outlined)').textContent = message;
+            errorDiv.classList.remove('-translate-y-full');
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                if (errorDiv.classList.contains('transform')) {
+                    errorDiv.classList.add('-translate-y-full');
+                }
+            }, 5000);
+        }
+
+        // Enhanced keyboard navigation
+        function handleKeyboardNavigation(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                event.currentTarget.click();
+            }
+        }
+
+        // Update amount when custom input changes with real-time validation
+        document.getElementById('custom-amount').addEventListener('input', function () {
+            selectedAmount = this.value;
+
+            // Real-time validation
+            if (this.value) {
+                validateAmount(parseFloat(this.value));
+            } else {
+                clearAmountError();
+            }
+
+            // Remove selection from suggested amounts
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-background-dark', 'ring-2', 'ring-primary');
+                btn.classList.add('bg-zinc-100', 'dark:bg-zinc-800', 'text-background-dark', 'dark:text-background-light');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+
+            updateProceedButton();
+        });
+
+        // Prevent negative values
+        document.getElementById('custom-amount').addEventListener('keydown', function (event) {
+            if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+                event.preventDefault();
+            }
+        });
+
+        // Add keyboard support to buttons
+        document.querySelectorAll('.amount-btn, .payment-method-btn').forEach(btn => {
+            btn.addEventListener('keydown', handleKeyboardNavigation);
+            btn.setAttribute('tabindex', '0');
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProceedButton();
+
+            // Set initial disabled state
+            const proceedBtn = document.getElementById('proceed-button');
+            proceedBtn.disabled = true;
+            proceedBtn.classList.add('opacity-50');
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProceedButton();
+        });
+    </script>
+</body>
+
+</html>

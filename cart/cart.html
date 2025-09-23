@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - FreshGrocer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .delete-btn {
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .quantity-btn {
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background-color: rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Desktop Layout -->
+    <div class="hidden md:block min-h-screen">
+        <header class="bg-[#0C2D57] text-white sticky top-0 z-10 shadow-md">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="flex h-20 items-center justify-between">
+                    <button class="text-white p-2 rounded-lg hover:bg-blue-900 transition-colors"
+                        onclick="history.back()" aria-label="Go back">
+                        <span class="material-symbols-outlined text-2xl">
+                            arrow_back
+                        </span>
+                    </button>
+                    <h1 class="text-2xl font-bold">My Cart</h1>
+                    <div class="w-10"></div> <!-- Spacer for balance -->
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto py-8 px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Cart Items Section -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6">Cart Items</h2>
+
+                        <div id="cart-items-desktop" class="space-y-4">
+                            <!-- Cart items will be dynamically inserted here -->
+                        </div>
+
+                        <div id="empty-cart-message-desktop" class="hidden text-center py-12">
+                            <span class="material-symbols-outlined text-6xl text-gray-400 mb-4">
+                                shopping_cart
+                            </span>
+                            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
+                            <p class="text-gray-500 text-lg">Add some items to get started</p>
+                            <button
+                                class="mt-6 bg-[#FFD700] text-[#0C2D57] font-bold py-3 px-8 rounded-lg hover:bg-opacity-90 transition-colors text-lg"
+                                onclick="window.location.href='../login/7-Homepage.html'">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary Section -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6">Order Summary</h2>
+
+                        <div class="space-y-4 mb-6">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal</span>
+                                <span id="subtotal-desktop" class="text-gray-800 font-medium">₹1,049</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Delivery Charges</span>
+                                <span id="delivery-charges-desktop" class="text-gray-800 font-medium">₹40</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Tax (5%)</span>
+                                <span id="tax-desktop" class="text-gray-800 font-medium">₹52</span>
+                            </div>
+                            <div class="border-t border-gray-300 pt-4 mt-2">
+                                <div class="flex justify-between text-gray-800 font-bold text-lg">
+                                    <span>Total Amount</span>
+                                    <span id="total-amount-desktop">₹1,141</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="checkout-btn-desktop"
+                            class="w-full bg-[#FFD700] text-[#0C2D57] font-bold py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4">
+                            Proceed to Checkout
+                        </button>
+                        <button
+                            class="w-full border border-[#FFD700] text-[#FFD700] font-bold py-3 rounded-lg text-lg hover:bg-[#FFD700] hover:text-[#0C2D57] transition-colors"
+                            onclick="window.location.href='../login/7-Homepage.html'">
+                            Continue Shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Layout -->
+    <div class="block md:hidden">
+        <div class="max-w-md mx-auto min-h-screen flex flex-col">
+            <header class="bg-[#0C2D57] text-white sticky top-0 z-10 shadow-md">
+                <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                    <button class="text-white" onclick="history.back()" aria-label="Go back">
+                        <span class="material-symbols-outlined">
+                            arrow_back_ios
+                        </span>
+                    </button>
+                    <h1 class="text-xl font-bold">My Cart</h1>
+                    <div class="w-8"></div>
+                </div>
+            </header>
+
+            <main class="flex-grow bg-gray-100 p-4 overflow-y-auto">
+                <div id="cart-items-mobile" class="space-y-4">
+                    <!-- Cart items will be dynamically inserted here -->
+                </div>
+
+                <div id="empty-cart-message-mobile" class="hidden text-center py-12">
+                    <span class="material-symbols-outlined text-6xl text-gray-400 mb-4">
+                        shopping_cart
+                    </span>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
+                    <p class="text-gray-500">Add some items to get started</p>
+                    <button
+                        class="mt-4 bg-[#FFD700] text-[#0C2D57] font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors"
+                        onclick="window.location.href='../login/7-Homepage.html'">
+                        Continue Shopping
+                    </button>
+                </div>
+            </main>
+
+            <footer class="bg-white p-4 sticky bottom-0 border-t border-gray-200">
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span id="subtotal-mobile" class="text-gray-800 font-medium">₹1,049</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Delivery Charges</span>
+                        <span id="delivery-charges-mobile" class="text-gray-800 font-medium">₹40</span>
+                    </div>
+                    <div class="flex justify-between text-gray-800 font-bold text-lg">
+                        <span>Total Amount</span>
+                        <span id="total-amount-mobile">₹1,141</span>
+                    </div>
+                </div>
+                <button id="checkout-btn-mobile"
+                    class="w-full bg-[#FFD700] text-[#0C2D57] font-bold py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Proceed to Checkout
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Sample cart data
+        const cart = [
+            {
+                id: 1,
+                name: "Organic Bananas",
+                price: 149,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 2,
+                name: "Avocados",
+                price: 330,
+                quantity: 2,
+                image: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 3,
+                name: "Strawberries",
+                price: 240,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 4,
+                name: "Fresh Apples",
+                price: 330,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            }
+        ];
+
+        // Format currency for Indian Rupees
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Calculate and update totals
+        function updateTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryCharge = subtotal > 0 ? 40 : 0;
+            const tax = subtotal > 0 ? Math.round(subtotal * 0.05) : 0;
+            const total = subtotal + deliveryCharge + tax;
+
+            // Update both views
+            document.getElementById('subtotal-mobile').textContent = formatCurrency(subtotal);
+            document.getElementById('delivery-charges-mobile').textContent = formatCurrency(deliveryCharge);
+            document.getElementById('total-amount-mobile').textContent = formatCurrency(total);
+
+            document.getElementById('subtotal-desktop').textContent = formatCurrency(subtotal);
+            document.getElementById('delivery-charges-desktop').textContent = formatCurrency(deliveryCharge);
+            document.getElementById('tax-desktop').textContent = formatCurrency(tax);
+            document.getElementById('total-amount-desktop').textContent = formatCurrency(total);
+
+            // Enable/disable checkout buttons
+            document.getElementById('checkout-btn-mobile').disabled = cart.length === 0;
+            document.getElementById('checkout-btn-desktop').disabled = cart.length === 0;
+        }
+
+        // Render cart items for mobile
+        function renderMobileCart() {
+            const cartItemsContainer = document.getElementById('cart-items-mobile');
+            const emptyCartMessage = document.getElementById('empty-cart-message-mobile');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '';
+                emptyCartMessage.classList.remove('hidden');
+                updateTotals();
+                return;
+            }
+
+            emptyCartMessage.classList.add('hidden');
+            cartItemsContainer.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item flex items-center bg-white p-3 rounded-lg shadow-sm';
+                itemElement.innerHTML = `
+                    <img alt="${item.name}" class="w-16 h-16 rounded-lg object-cover" src="${item.image}" />
+                    <div class="flex-grow ml-4">
+                        <h2 class="font-semibold text-gray-800">${item.name}</h2>
+                        <p class="text-gray-600 text-sm">${formatCurrency(item.price * item.quantity)}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="quantity-btn w-8 h-8 rounded-full bg-yellow-100 text-gray-800 flex items-center justify-center" onclick="updateQuantity(${index}, -1)" aria-label="Decrease quantity">
+                            <span class="material-symbols-outlined text-sm">remove</span>
+                        </button>
+                        <span class="font-bold text-gray-800 w-6 text-center">${item.quantity}</span>
+                        <button class="quantity-btn w-8 h-8 rounded-full bg-yellow-100 text-gray-800 flex items-center justify-center" onclick="updateQuantity(${index}, 1)" aria-label="Increase quantity">
+                            <span class="material-symbols-outlined text-sm">add</span>
+                        </button>
+                    </div>
+                    <button class="delete-btn ml-4 text-gray-500" onclick="removeFromCart(${index})" aria-label="Remove item">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+
+            updateTotals();
+        }
+
+        // Render cart items for desktop
+        function renderDesktopCart() {
+            const cartItemsContainer = document.getElementById('cart-items-desktop');
+            const emptyCartMessage = document.getElementById('empty-cart-message-desktop');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '';
+                emptyCartMessage.classList.remove('hidden');
+                updateTotals();
+                return;
+            }
+
+            emptyCartMessage.classList.add('hidden');
+            cartItemsContainer.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item flex items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100';
+                itemElement.innerHTML = `
+                    <img alt="${item.name}" class="w-20 h-20 rounded-lg object-cover" src="${item.image}" />
+                    <div class="flex-grow ml-4">
+                        <h2 class="font-semibold text-gray-800 text-lg">${item.name}</h2>
+                        <p class="text-gray-600">${formatCurrency(item.price)} per item</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button class="quantity-btn w-10 h-10 rounded-full bg-yellow-100 text-gray-800 flex items-center justify-center hover:bg-yellow-200" onclick="updateQuantity(${index}, -1)" aria-label="Decrease quantity">
+                            <span class="material-symbols-outlined">remove</span>
+                        </button>
+                        <span class="font-bold text-gray-800 w-8 text-center text-lg">${item.quantity}</span>
+                        <button class="quantity-btn w-10 h-10 rounded-full bg-yellow-100 text-gray-800 flex items-center justify-center hover:bg-yellow-200" onclick="updateQuantity(${index}, 1)" aria-label="Increase quantity">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                    <button class="delete-btn ml-6 text-gray-500 hover:text-red-500 transition-colors" onclick="removeFromCart(${index})" aria-label="Remove item">
+                        <span class="material-symbols-outlined text-2xl">delete</span>
+                    </button>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+
+            updateTotals();
+        }
+
+        // Update item quantity
+        function updateQuantity(index, change) {
+            const newQuantity = cart[index].quantity + change;
+
+            if (newQuantity < 1) {
+                removeFromCart(index);
+                return;
+            }
+
+            cart[index].quantity = newQuantity;
+            renderMobileCart();
+            renderDesktopCart();
+        }
+
+        // Remove item from cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderMobileCart();
+            renderDesktopCart();
+
+            // Show a confirmation message
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            notification.textContent = 'Item removed from cart';
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 2000);
+        }
+
+        // Checkout functionality
+        function setupCheckout() {
+            document.getElementById('checkout-btn-mobile').addEventListener('click', function () {
+                if (cart.length === 0) {
+                    alert('Your cart is empty. Please add items before proceeding to checkout.');
+                    return;
+                }
+                window.location.href = 'checkout.html';
+            });
+
+            document.getElementById('checkout-btn-desktop').addEventListener('click', function () {
+                if (cart.length === 0) {
+                    alert('Your cart is empty. Please add items before proceeding to checkout.');
+                    return;
+                }
+                window.location.href = 'checkout.html';
+            });
+
+            // Update 'Continue Shopping' buttons to redirect to homepage
+            // Desktop
+            const continueDesktop = document.querySelector("button[onclick*=index.html]");
+            if (continueDesktop) {
+                continueDesktop.onclick = function () {
+                    window.location.href = '../login/7-Homepage.html';
+                };
+            }
+            // Mobile
+            const continueMobile = document.querySelector("#empty-cart-message-mobile button");
+            if (continueMobile) {
+                continueMobile.onclick = function () {
+                    window.location.href = '../login/7-Homepage.html';
+                };
+            }
+        }
+
+        // Initialize the cart
+        document.addEventListener('DOMContentLoaded', function () {
+            renderMobileCart();
+            renderDesktopCart();
+            setupCheckout();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>Taaza - OTP Verification</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFD700",
+                        "primary-light": "#FFF9C4",
+                        "primary-dark": "#FBC02D",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0C2D57",
+                        "accent-blue": "#1E40AF",
+                        "foreground-light": "#E0E0E0",
+                        "foreground-dark": "#E0E0E0",
+                        "input-light": "#FFFFFF",
+                        "input-dark": "#1F3A66",
+                        "input-border-light": "#E0E0E0",
+                        "input-border-dark": "#3B5998",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 1.5s ease-in-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0C2D57 0%, #1E3A6F 100%);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Responsive font sizing */
+        @media (max-width: 640px) {
+            .taaza-title {
+                font-size: 3rem !important;
+            }
+
+            .taaza-subtitle {
+                font-size: 1.125rem !important;
+                padding: 0 1rem;
+            }
+
+            .otp-input {
+                width: 2.5rem !important;
+                height: 3.5rem !important;
+                font-size: 1.5rem !important;
+            }
+
+            .verify-button {
+                padding: 1rem !important;
+                font-size: 1.125rem !important;
+                min-height: 3.5rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .taaza-title {
+                font-size: 2.5rem !important;
+            }
+
+            .taaza-subtitle {
+                font-size: 1rem !important;
+            }
+
+            .otp-input {
+                width: 2.25rem !important;
+                height: 3rem !important;
+                font-size: 1.25rem !important;
+            }
+
+            .otp-container {
+                gap: 0.5rem !important;
+            }
+        }
+
+        /* Enhanced touch targets for mobile */
+        .verify-button {
+            min-height: 44px;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .verify-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Custom shape for visual interest - same as other pages */
+        .shape-background {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* OTP input styling */
+        .otp-input {
+            width: 3rem;
+            height: 4rem;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: bold;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            color: #0C2D57;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #FFD700;
+            background: rgba(255, 255, 255, 1);
+            color: #0C2D57;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Remove number input arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Animation for fade-in */
+        .animate-fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* OTP container */
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Improved focus states for accessibility */
+        .verify-button:focus {
+            outline: 2px solid #FFD700;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body class="font-display overflow-hidden">
+    <div
+        class="relative flex flex-col items-center justify-center min-h-screen bg-background-light dark:bg-background-dark p-4 overflow-hidden">
+        <!-- Animated background elements - same as other pages -->
+        <div class="shape-background"></div>
+
+        <div class="relative z-10 w-full max-w-sm mx-auto animate-fade-in">
+            <!-- Logo section - same as other pages -->
+            <div class="flex flex-col items-center mb-8">
+                <h1
+                    class="taaza-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold uppercase tracking-wider text-background-light mb-2">
+                    Taaza
+                </h1>
+
+                <p class="taaza-subtitle text-lg sm:text-xl md:text-2xl text-primary font-medium text-center">
+                    Straight from the Farm to Your Door
+                </p>
+            </div>
+
+            <!-- OTP Verification content -->
+            <div class="bg-background-dark/70 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+                <h2 class="text-2xl font-bold text-background-light text-center mb-2">Verify with OTP</h2>
+                <p class="text-background-light/80 text-center mb-6">Enter the 6-digit code sent to your phone number.
+                </p>
+
+                <!-- OTP Inputs -->
+                <div class="otp-container">
+                    <input class="otp-input" type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
+                        id="otp1" />
+                    <input class="otp-input" type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
+                        id="otp2" />
+                    <input class="otp-input" type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
+                        id="otp3" />
+                    <input class="otp-input" type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
+                        id="otp4" />
+                    <input class="otp-input" type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
+                        id="otp5" />
+                    <input class="otp-input" type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1"
+                        id="otp6" />
+                </div>
+
+                <!-- Verify Button -->
+                <button
+                    class="verify-button w-full bg-primary text-background-dark font-bold py-3 rounded-lg text-lg hover:bg-primary-dark transition-colors shadow-lg">
+                    Verify OTP
+                </button>
+
+                <!-- Resend OTP link -->
+                <div class="mt-4 text-center">
+                    <p class="text-background-light/80 text-sm">Didn't receive the code? <a
+                            class="font-semibold text-primary hover:underline" href="#">Resend OTP</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // OTP input functionality
+            const otpInputs = document.querySelectorAll('.otp-input');
+
+            otpInputs.forEach((input, index) => {
+                // Handle input
+                input.addEventListener('input', function (e) {
+                    const value = e.target.value;
+
+                    // Only allow single digit
+                    if (value.length > 1) {
+                        e.target.value = value.slice(-1);
+                    }
+
+                    // Only allow numbers
+                    if (!/^[0-9]$/.test(e.target.value)) {
+                        e.target.value = '';
+                        return;
+                    }
+
+                    // Move to next input
+                    if (e.target.value && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+
+                // Handle backspace
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+
+                // Handle paste
+                input.addEventListener('paste', function (e) {
+                    e.preventDefault();
+                    const pasteData = e.clipboardData.getData('text/plain');
+                    const digits = pasteData.replace(/[^0-9]/g, '').slice(0, 6);
+
+                    if (digits.length > 0) {
+                        digits.split('').forEach((digit, i) => {
+                            if (i < otpInputs.length) {
+                                otpInputs[i].value = digit;
+                            }
+                        });
+
+                        // Focus next empty input or last input
+                        const nextIndex = Math.min(digits.length, otpInputs.length - 1);
+                        otpInputs[nextIndex].focus();
+                    }
+                });
+            });
+
+            // Add event listener to the Verify button
+            const verifyBtn = document.querySelector('.verify-button');
+            verifyBtn.addEventListener('click', function () {
+                // Get OTP value
+                const otpValue = Array.from(otpInputs).map(input => input.value).join('');
+
+                if (otpValue.length !== 6) {
+                    alert('Please enter the complete 6-digit OTP');
+                    return;
+                }
+
+                // Redirect to user registration page after verification
+                console.log('OTP entered:', otpValue);
+                console.log('Redirecting to user registration...');
+
+                // Get email from localStorage
+                const email = localStorage.getItem('taaza_email') || '';
+                window.location.href = `5-User Registration.html?email=${encodeURIComponent(email)}`;
+            });
+
+            // Auto-focus first OTP input on page load
+            const firstOtpInput = document.querySelector('.otp-input');
+            if (firstOtpInput) {
+                setTimeout(() => {
+                    firstOtpInput.focus();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+
+</html>

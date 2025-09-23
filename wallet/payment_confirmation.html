@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Confirm Payment - Taaza</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFD700",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0C2D57",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Focus styles */
+        .focus-visible:focus {
+            outline: 2px solid #FFD700;
+            outline-offset: 2px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body class="font-display bg-background-light dark:bg-zinc-900">
+    <div class="flex flex-col h-screen">
+        <header class="bg-background-dark text-white p-4">
+            <div class="container mx-auto flex items-center justify-between">
+                <button class="text-white focus-visible:focus rounded-lg p-2 hover:bg-blue-900 transition-colors"
+                    onclick="confirmGoBack()" aria-label="Go back to payment options">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="text-lg font-bold">Confirm Payment</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+
+        <main
+            class="flex-grow p-4 bg-background-light dark:bg-zinc-900 text-background-dark dark:text-background-light">
+            <!-- Payment Summary Card -->
+            <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 mb-6 shadow-lg">
+                <div class="text-center mb-6">
+                    <div
+                        class="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span
+                            class="material-symbols-outlined text-green-600 dark:text-green-400 text-3xl">account_balance_wallet</span>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Add Money to Wallet</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Review your payment details</p>
+                </div>
+
+                <!-- Amount Details -->
+                <div class="space-y-4 mb-6">
+                    <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                        <span class="text-gray-600 dark:text-gray-400">Amount to Add</span>
+                        <span class="text-2xl font-bold text-green-600" id="amount-display">₹0</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                        <span class="text-gray-600 dark:text-gray-400">Current Balance</span>
+                        <span class="font-semibold">₹570.00</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                        <span class="text-gray-600 dark:text-gray-400">New Balance</span>
+                        <span class="font-semibold text-blue-600" id="new-balance">₹570.00</span>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="bg-gray-50 dark:bg-zinc-700 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold mb-3">Payment Method</h3>
+                    <div class="flex items-center" id="payment-method-display" aria-live="polite">
+                        <span class="material-symbols-outlined mr-3 text-gray-500">credit_card</span>
+                        <span>Credit/Debit Card</span>
+                    </div>
+                </div>
+
+                <!-- Security Notice -->
+                <div
+                    class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                    <div class="flex items-center">
+                        <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 mr-3">security</span>
+                        <div>
+                            <h4 class="font-semibold text-blue-800 dark:text-blue-200">Secure Payment</h4>
+                            <p class="text-sm text-blue-600 dark:text-blue-300">Your payment is protected with 256-bit
+                                SSL encryption</p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                    <div class="flex items-start">
+                        <span class="material-symbols-outlined text-blue-600 mr-3 mt-0.5">security</span>
+                        <div>
+                            <p class="text-sm text-blue-800 dark:text-blue-200 font-medium">Secure Payment</p>
+                            <p class="text-xs text-blue-600 dark:text-blue-300 mt-1">Your payment information is
+                                encrypted and secure</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-4 bg-background-light dark:bg-zinc-900">
+            <div class="space-y-3">
+                <button id="proceed-button" onclick="proceedToPayment()" aria-describedby="proceed-status"
+                    class="w-full bg-primary text-background-dark font-bold py-4 rounded-lg text-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:focus transform hover:scale-[1.02] active:scale-[0.98]">
+                    <span class="inline-flex items-center justify-center">
+                        <span id="proceed-text">Proceed to Payment</span>
+                        <span id="proceed-spinner" class="ml-2 spinner hidden">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </span>
+                    </span>
+                </button>
+                <button onclick="confirmGoBack()" aria-label="Go back to edit payment details"
+                    class="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors focus-visible:focus">
+                    Back to Edit
+                </button>
+            </div>
+            <div id="proceed-status" class="sr-only" aria-live="polite"></div>
+        </footer>
+    </div>
+
+    <script>
+        let isProcessing = false;
+
+        // Get payment details from URL parameters
+        function getPaymentDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const amount = urlParams.get('amount') || '0';
+            const method = urlParams.get('method') || 'card';
+
+            return { amount, method };
+        }
+
+        // Format currency with Indian number formatting
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount).replace('₹', '');
+        }
+
+        // Display payment details
+        function displayPaymentDetails() {
+            const { amount, method } = getPaymentDetails();
+            const amountNum = parseInt(amount) || 0;
+
+            // Update amount display with proper formatting
+            document.getElementById('amount-display').textContent = `₹${formatCurrency(amountNum)}`;
+
+            // Calculate new balance
+            const currentBalance = 570;
+            const newBalance = currentBalance + amountNum;
+            document.getElementById('new-balance').textContent = `₹${formatCurrency(newBalance)}`;
+
+            // Update payment method display
+            const paymentMethodDisplay = document.getElementById('payment-method-display');
+            let icon, text;
+
+            switch (method) {
+                case 'upi':
+                    icon = 'payments';
+                    text = 'UPI Payment';
+                    break;
+                case 'card':
+                default:
+                    icon = 'credit_card';
+                    text = 'Credit/Debit Card';
+                    break;
+            }
+
+            paymentMethodDisplay.innerHTML = `
+                <span class="material-symbols-outlined mr-3 text-gray-500">${icon}</span>
+                <span>${text}</span>
+            `;
+
+            // Announce payment details for screen readers
+            announceToScreenReader(`Payment confirmation: ₹${formatCurrency(amountNum)} via ${text}`);
+        }
+
+        function confirmGoBack() {
+            if (confirm('Are you sure you want to go back? Any changes to your payment details will be lost.')) {
+                window.history.back();
+            }
+        }
+
+        function proceedToPayment() {
+            if (isProcessing) return;
+
+            const { amount, method } = getPaymentDetails();
+
+            if (!amount || parseInt(amount) <= 0) {
+                alert('Invalid payment amount. Please go back and try again.');
+                return;
+            }
+
+            // Show loading state
+            isProcessing = true;
+            showLoadingState();
+
+            // Announce to screen readers
+            announceToScreenReader('Processing your payment request, please wait');
+
+            // Simulate loading and redirect
+            setTimeout(() => {
+                if (method === 'card') {
+                    window.location.href = `card_details.html?amount=${amount}`;
+                } else {
+                    window.location.href = `upi_payment.html?amount=${amount}`;
+                }
+            }, 1500);
+        }
+
+        function showLoadingState() {
+            const proceedBtn = document.getElementById('proceed-button');
+            const proceedText = document.getElementById('proceed-text');
+            const proceedSpinner = document.getElementById('proceed-spinner');
+
+            proceedText.textContent = 'Processing...';
+            proceedSpinner.classList.remove('hidden');
+            proceedBtn.disabled = true;
+        }
+
+        function announceToScreenReader(message) {
+            const statusDiv = document.getElementById('proceed-status');
+            statusDiv.textContent = message;
+        }
+
+        // Proceed to payment processing
+        function proceedToPayment() {
+            const { amount, method } = getPaymentDetails();
+
+            // Redirect to appropriate payment details page based on method
+            if (method === 'upi') {
+                window.location.href = `upi_payment.html?amount=${amount}&method=${method}`;
+            } else if (method === 'card') {
+                window.location.href = `card_details.html?amount=${amount}&method=${method}`;
+            } else {
+                // Fallback to direct processing for unknown methods
+                window.location.href = `payment_processing.html?amount=${amount}&method=${method}`;
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            displayPaymentDetails();
+        });
+    </script>
+</body>
+
+</html>

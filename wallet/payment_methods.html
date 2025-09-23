@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Payment Methods</title>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFD700",
+                        "header-bg": "#0C2D57",
+                        "background-light": "#f8f8f5",
+                        "content-light": "#1f2937",
+                        "subtle-light": "#6b7280",
+                        "background-dark": "#111827",
+                        "content-dark": "#f9fafb",
+                        "subtle-dark": "#9ca3af",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <div class="flex flex-col h-screen justify-between">
+        <div>
+            <header class="bg-header-bg text-white p-4 shadow-lg">
+                <div class="flex items-center">
+                    <button class="text-white">
+                        <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                    </button>
+                    <h1 class="text-xl font-bold text-center flex-grow pr-6">Payment Methods</h1>
+                </div>
+            </header>
+            <main class="p-4 space-y-4">
+                <div
+                    class="bg-white dark:bg-background-dark/50 p-4 rounded-lg shadow-sm flex items-center justify-between border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-4">
+                        <img alt="Visa card logo" class="h-8 w-auto"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWMGpuI7XlujdZEpKaKaTRS4ZUUKeAi0iNFhp0Y0K80GXKC_yE4aTHS8oDajkJPqSsbncVfIpbNSsSY6qz0kv0RvrzdZ_yPy-roqXXOW0pFlS_yIPz8S8L5HwGZZJCrk6I4q9nq0OpKxxnTtb0bE561G6g9PfZ6tM1BNhdcEsSdsp94mrYdC6yQ3-n1HWlINDVtqpurU0NIKVVtUVDgJevSByG-_Aqz2r9N8S3In1LriuhnfrhsJVD4JiJDtXs_C1MAxSFhJo9cO0" />
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-content-light dark:text-content-dark">Credit Card</p>
+                            <p class="text-sm text-subtle-light dark:text-subtle-dark">Visa ending in 4567</p>
+                        </div>
+                    </div>
+                    <button class="text-subtle-light dark:text-subtle-dark hover:text-red-500 dark:hover:text-red-400">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+                <div
+                    class="bg-white dark:bg-background-dark/50 p-4 rounded-lg shadow-sm flex items-center justify-between border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-full p-2">
+                            <span
+                                class="material-symbols-outlined text-content-light dark:text-content-dark">payments</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-content-light dark:text-content-dark">UPI</p>
+                            <p class="text-sm text-subtle-light dark:text-subtle-dark">user@bank</p>
+                        </div>
+                    </div>
+                    <button class="text-subtle-light dark:text-subtle-dark hover:text-red-500 dark:hover:text-red-400">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+                <div
+                    class="bg-white dark:bg-background-dark/50 p-4 rounded-lg shadow-sm flex items-center justify-between border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-full p-2">
+                            <span
+                                class="material-symbols-outlined text-content-light dark:text-content-dark">account_balance</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-content-light dark:text-content-dark">Bank of India</p>
+                            <p class="text-sm text-subtle-light dark:text-subtle-dark">Net Banking</p>
+                        </div>
+                    </div>
+                    <button class="text-subtle-light dark:text-subtle-dark hover:text-red-500 dark:hover:text-red-400">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+            </main>
+        </div>
+        <footer class="p-4 bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-800">
+            <button onclick="window.location.href='add_new_card.html'"
+                class="w-full bg-primary text-gray-900 font-bold py-3 px-4 rounded-lg shadow-md hover:bg-primary/90 transition-colors duration-300">
+                Add New Payment Method
+            </button>
+        </footer>
+    </div>
+
+</body>
+
+</html>

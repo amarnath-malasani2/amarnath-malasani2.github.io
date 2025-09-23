@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Order Confirmed</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFD700",
+                        "secondary": "#0C2D57",
+                        "accent": "#FFFFFF",
+                        "text-primary": "#FFFFFF",
+                        "text-secondary": "#E0E0E0",
+                        "background": "#0C2D57",
+                        "button-outline": "#FFD700"
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem",
+                        "lg": "1rem",
+                        "full": "9999px"
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-secondary font-display">
+    <div class="flex flex-col h-screen justify-between p-6">
+        <div class="text-center flex-grow flex flex-col items-center justify-center">
+            <div class="mb-8">
+                <span class="material-symbols-outlined text-accent"
+                    style="font-size: 96px; font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48">
+                    check_circle
+                </span>
+            </div>
+            <h1 class="text-3xl font-bold text-text-primary mb-4">Order Confirmed!</h1>
+            <p class="text-lg font-medium text-text-primary mb-2">Your order has been placed successfully!</p>
+            <p class="text-base text-text-secondary mb-4">Expected delivery by <strong>June 24th</strong> at
+                <strong>10:00 AM - 11:00 AM</strong>
+            </p>
+            <p class="text-sm text-text-secondary">Order ID: #A58B2G9P4</p>
+        </div>
+        <div class="w-full flex flex-col gap-4">
+            <button class="w-full bg-primary text-secondary font-bold py-4 rounded-lg text-lg">
+                Track Order
+            </button>
+            <button class="w-full border-2 border-button-outline text-primary font-bold py-4 rounded-lg text-lg">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+</body>
+
+</html>

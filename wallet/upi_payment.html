@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UPI Payment - Taaza</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFD700",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0C2D57",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .upi-app-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .qr-code {
+            background:
+                linear-gradient(45deg, #000 25%, transparent 25%),
+                linear-gradient(-45deg, #000 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #000 75%),
+                linear-gradient(-45deg, transparent 75%, #000 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body class="font-display bg-gray-50 dark:bg-zinc-900">
+    <div class="flex flex-col h-screen">
+        <header class="bg-background-dark text-white p-4">
+            <div class="container mx-auto flex items-center justify-between">
+                <button class="text-white" onclick="window.history.back()">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="text-lg font-bold">UPI Payment</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+
+        <main
+            class="flex-grow p-4 bg-gray-50 dark:bg-zinc-900 text-background-dark dark:text-background-light overflow-y-auto">
+            <!-- Payment Amount -->
+            <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 mb-6 text-center shadow-sm">
+                <p class="text-sm text-gray-600 dark:text-gray-400">Amount to Pay</p>
+                <p class="text-2xl font-bold text-green-600" id="payment-amount">₹0</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">to Taaza Wallet</p>
+            </div>
+
+            <!-- Payment Method Selection -->
+            <div class="space-y-4 mb-6">
+                <!-- UPI ID Option -->
+                <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-lg">Pay using UPI ID</h3>
+                        <span class="material-symbols-outlined text-blue-600">account_balance_wallet</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Enter UPI ID
+                            </label>
+                            <input type="text" id="upi-id" placeholder="yourname@paytm / yourname@googlepay"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white dark:bg-zinc-700 text-gray-900 dark:text-white">
+                            <div class="text-red-500 text-sm mt-1 hidden" id="upi-id-error">Please enter a valid UPI ID
+                            </div>
+                        </div>
+
+                        <button onclick="payWithUpiId()" id="upi-pay-button" disabled
+                            class="w-full bg-gray-400 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            Enter UPI ID
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="flex items-center my-6">
+                    <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+                    <span class="px-4 text-gray-500 text-sm">or</span>
+                    <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+
+                <!-- UPI Apps -->
+                <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 shadow-sm">
+                    <h3 class="font-semibold text-lg mb-4">Pay using UPI Apps</h3>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="payWithApp('googlepay')"
+                            class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl mr-3 flex items-center justify-center overflow-hidden">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="12" fill="#4285F4" />
+                                    <path
+                                        d="M24 15.5C27.5899 15.5 30.5 18.4101 30.5 22C30.5 25.5899 27.5899 28.5 24 28.5C20.4101 28.5 17.5 25.5899 17.5 22C17.5 18.4101 20.4101 15.5 24 15.5ZM24 32.5C20.4 32.5 12 30.7 12 27.1V24.5H36V27.1C36 30.7 27.6 32.5 24 32.5Z"
+                                        fill="white" />
+                                    <text x="24" y="25" text-anchor="middle" fill="white" font-weight="bold"
+                                        font-size="14">G</text>
+                                </svg>
+                            </div>
+                            <span class="font-medium group-hover:text-blue-600 transition-colors">Google Pay</span>
+                        </button>
+
+                        <button onclick="payWithApp('phonepe')"
+                            class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl mr-3 flex items-center justify-center overflow-hidden">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="12" fill="#5F259F" />
+                                    <circle cx="24" cy="24" r="10" fill="white" />
+                                    <text x="24" y="28" text-anchor="middle" fill="#5F259F" font-weight="bold"
+                                        font-size="12">Pe</text>
+                                </svg>
+                            </div>
+                            <span class="font-medium group-hover:text-purple-600 transition-colors">PhonePe</span>
+                        </button>
+
+                        <button onclick="payWithApp('paytm')"
+                            class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl mr-3 flex items-center justify-center overflow-hidden">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="12" fill="#00BAF2" />
+                                    <circle cx="24" cy="20" r="6" fill="white" />
+                                    <rect x="18" y="26" width="12" height="8" rx="2" fill="white" />
+                                </svg>
+                            </div>
+                            <span class="font-medium group-hover:text-blue-500 transition-colors">Paytm</span>
+                        </button>
+
+                        <button onclick="payWithApp('bhim')"
+                            class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl mr-3 flex items-center justify-center overflow-hidden">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="12" fill="#FF6B35" />
+                                    <path d="M24 12L18 20H24L30 28H24L24 36L30 28H36L24 12Z" fill="white" />
+                                </svg>
+                            </div>
+                            <span class="font-medium group-hover:text-orange-600 transition-colors">BHIM UPI</span>
+                        </button>
+
+                        <button onclick="payWithApp('amazon')"
+                            class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl mr-3 flex items-center justify-center overflow-hidden">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                    <rect width="48" height="48" rx="12" fill="#FF9900" />
+                                    <path d="M14 24C14 19 18 15 23 15C28 15 32 19 32 24" stroke="white" stroke-width="3"
+                                        fill="none" />
+                                    <circle cx="20" cy="28" r="2" fill="white" />
+                                    <circle cx="28" cy="28" r="2" fill="white" />
+                                </svg>
+                            </div>
+                            <span class="font-medium group-hover:text-orange-500 transition-colors">Amazon Pay</span>
+                        </button>
+
+                        <button onclick="payWithApp('other')"
+                            class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors group">
+                            <div
+                                class="w-12 h-12 rounded-xl mr-3 flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600">
+                                <span class="material-symbols-outlined text-white text-xl">apps</span>
+                            </div>
+                            <span class="font-medium group-hover:text-purple-600 transition-colors">Other UPI
+                                Apps</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- QR Code Option -->
+                <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-lg">Scan QR Code</h3>
+                        <span class="material-symbols-outlined text-blue-600">qr_code_scanner</span>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="w-40 h-40 mx-auto mb-4 rounded-lg border-2 border-gray-200 p-3 bg-white">
+                            <svg width="100%" height="100%" viewBox="0 0 128 128" fill="none">
+                                <!-- QR Code Pattern -->
+                                <rect width="128" height="128" fill="white" />
+
+                                <!-- Corner squares -->
+                                <rect x="4" y="4" width="20" height="20" fill="black" />
+                                <rect x="8" y="8" width="12" height="12" fill="white" />
+                                <rect x="10" y="10" width="8" height="8" fill="black" />
+
+                                <rect x="104" y="4" width="20" height="20" fill="black" />
+                                <rect x="108" y="8" width="12" height="12" fill="white" />
+                                <rect x="110" y="10" width="8" height="8" fill="black" />
+
+                                <rect x="4" y="104" width="20" height="20" fill="black" />
+                                <rect x="8" y="108" width="12" height="12" fill="white" />
+                                <rect x="10" y="110" width="8" height="8" fill="black" />
+
+                                <!-- Data pattern -->
+                                <rect x="28" y="4" width="4" height="4" fill="black" />
+                                <rect x="36" y="4" width="4" height="4" fill="black" />
+                                <rect x="44" y="4" width="4" height="4" fill="black" />
+                                <rect x="60" y="4" width="4" height="4" fill="black" />
+                                <rect x="68" y="4" width="4" height="4" fill="black" />
+                                <rect x="84" y="4" width="4" height="4" fill="black" />
+                                <rect x="92" y="4" width="4" height="4" fill="black" />
+
+                                <!-- More pattern elements -->
+                                <rect x="4" y="28" width="4" height="4" fill="black" />
+                                <rect x="12" y="28" width="4" height="4" fill="black" />
+                                <rect x="28" y="28" width="4" height="4" fill="black" />
+                                <rect x="36" y="28" width="4" height="4" fill="black" />
+                                <rect x="52" y="28" width="4" height="4" fill="black" />
+                                <rect x="68" y="28" width="4" height="4" fill="black" />
+                                <rect x="84" y="28" width="4" height="4" fill="black" />
+                                <rect x="100" y="28" width="4" height="4" fill="black" />
+                                <rect x="116" y="28" width="4" height="4" fill="black" />
+
+                                <!-- Center square -->
+                                <rect x="56" y="56" width="16" height="16" fill="black" />
+                                <rect x="60" y="60" width="8" height="8" fill="white" />
+                                <rect x="62" y="62" width="4" height="4" fill="black" />
+
+                                <!-- Random data pattern -->
+                                <rect x="28" y="36" width="4" height="4" fill="black" />
+                                <rect x="44" y="36" width="4" height="4" fill="black" />
+                                <rect x="52" y="44" width="4" height="4" fill="black" />
+                                <rect x="76" y="44" width="4" height="4" fill="black" />
+                                <rect x="84" y="52" width="4" height="4" fill="black" />
+                                <rect x="92" y="60" width="4" height="4" fill="black" />
+                                <rect x="100" y="68" width="4" height="4" fill="black" />
+                                <rect x="108" y="76" width="4" height="4" fill="black" />
+
+                                <!-- UPI logo in center -->
+                                <circle cx="64" cy="64" r="12" fill="#FF6B35" />
+                                <text x="64" y="68" text-anchor="middle" fill="white" font-weight="bold"
+                                    font-size="8">UPI</text>
+                            </svg>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            Scan this QR code with any UPI app to pay
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-4">
+                            Amount: <span class="font-medium" id="qr-amount">₹0</span> • Merchant: Taaza
+                        </p>
+                        <button onclick="refreshQR()" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            <span class="material-symbols-outlined text-sm mr-1">refresh</span>
+                            Refresh QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div class="flex items-start">
+                    <span class="material-symbols-outlined text-blue-600 mr-3 mt-0.5">security</span>
+                    <div>
+                        <p class="text-sm text-blue-800 dark:text-blue-200 font-medium">Secure UPI Payment</p>
+                        <p class="text-xs text-blue-600 dark:text-blue-300 mt-1">
+                            All UPI transactions are protected by your UPI PIN. We never store your UPI credentials.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Get payment details from URL
+        function getPaymentDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const amount = urlParams.get('amount') || '0';
+            const method = urlParams.get('method') || 'upi';
+            return { amount, method };
+        }
+
+        // Display payment amount
+        function displayPaymentAmount() {
+            const { amount } = getPaymentDetails();
+            document.getElementById('payment-amount').textContent = `₹${amount}`;
+            // Update QR code amount if element exists
+            const qrAmountElement = document.getElementById('qr-amount');
+            if (qrAmountElement) {
+                qrAmountElement.textContent = `₹${amount}`;
+            }
+        }
+
+        // Validate UPI ID
+        function validateUpiId(upiId) {
+            const upiRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/;
+            return upiRegex.test(upiId);
+        }
+
+        // Update UPI ID validation
+        function updateUpiIdValidation() {
+            const upiId = document.getElementById('upi-id').value;
+            const payButton = document.getElementById('upi-pay-button');
+            const errorElement = document.getElementById('upi-id-error');
+            const { amount } = getPaymentDetails();
+
+            if (upiId.length > 0) {
+                if (validateUpiId(upiId)) {
+                    document.getElementById('upi-id').classList.remove('border-red-500');
+                    document.getElementById('upi-id').classList.add('border-green-500');
+                    errorElement.classList.add('hidden');
+
+                    payButton.disabled = false;
+                    payButton.classList.remove('bg-gray-400');
+                    payButton.classList.add('bg-primary', 'hover:bg-yellow-500');
+                    payButton.textContent = `Pay ₹${amount}`;
+                } else {
+                    document.getElementById('upi-id').classList.remove('border-green-500');
+                    document.getElementById('upi-id').classList.add('border-red-500');
+                    errorElement.classList.remove('hidden');
+
+                    payButton.disabled = true;
+                    payButton.classList.add('bg-gray-400');
+                    payButton.classList.remove('bg-primary', 'hover:bg-yellow-500');
+                    payButton.textContent = 'Enter UPI ID';
+                }
+            } else {
+                document.getElementById('upi-id').classList.remove('border-green-500', 'border-red-500');
+                errorElement.classList.add('hidden');
+
+                payButton.disabled = true;
+                payButton.classList.add('bg-gray-400');
+                payButton.classList.remove('bg-primary', 'hover:bg-yellow-500');
+                payButton.textContent = 'Enter UPI ID';
+            }
+        }
+
+        // Pay with UPI ID
+        function payWithUpiId() {
+            const upiId = document.getElementById('upi-id').value;
+            const { amount, method } = getPaymentDetails();
+
+            if (!validateUpiId(upiId)) {
+                alert('Please enter a valid UPI ID');
+                return;
+            }
+
+            // In real app, this would initiate UPI payment
+            console.log('Paying with UPI ID:', upiId);
+
+            // Redirect to processing page
+            window.location.href = `payment_processing.html?amount=${amount}&method=upi&upiId=${encodeURIComponent(upiId)}`;
+        }
+
+        // Pay with UPI app
+        function payWithApp(appName) {
+            const { amount, method } = getPaymentDetails();
+
+            // In real app, this would open the specific UPI app or generate app-specific UPI link
+            console.log('Paying with app:', appName);
+
+            // Show loading message
+            alert(`Opening ${appName}... Please complete the payment in the app.`);
+
+            // Simulate app opening and redirect to processing
+            setTimeout(() => {
+                window.location.href = `payment_processing.html?amount=${amount}&method=upi&app=${appName}`;
+            }, 2000);
+        }
+
+        // Refresh QR code
+        function refreshQR() {
+            // In real app, this would generate a new QR code
+            alert('QR Code refreshed! Scan the new code to pay.');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            displayPaymentAmount();
+
+            // Add UPI ID validation
+            document.getElementById('upi-id').addEventListener('input', updateUpiIdValidation);
+        });
+    </script>
+</body>
+
+</html>
