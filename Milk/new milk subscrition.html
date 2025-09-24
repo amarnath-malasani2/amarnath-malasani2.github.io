@@ -913,9 +913,11 @@
 
         <!-- Footer with Confirm Button -->
         <footer
-            class="p-4 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm sticky bottom-0 border-t border-gray-200 dark:border-zinc-700">
+            class="p-4 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm sticky bottom-0 border-t border-gray-200 dark:border-zinc-700 z-[1001]"
+            style="z-index:1001;">
             <button id="confirm-btn" onclick="confirmSubscription(event)"
-                class="w-full bg-primary text-background-dark font-bold py-3 px-4 rounded-lg text-center hover:bg-yellow-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus-visible:focus">
+                class="w-full bg-primary text-background-dark font-bold py-3 px-4 rounded-lg text-center hover:bg-yellow-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus-visible:focus"
+                style="pointer-events:auto;z-index:1002;">
                 Confirm Subscription
             </button>
             <div id="progress-bar" class="progress-bar hidden">
@@ -1436,7 +1438,10 @@
 
         // Confirm subscription
         function confirmSubscription(event) {
-            event.preventDefault();
+            // If any modal is open, close it before proceeding
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
 
             const button = document.getElementById('confirm-btn');
             const progressBar = document.getElementById('progress-bar');
