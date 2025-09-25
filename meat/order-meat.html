@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Order Fresh Meat - Taaza</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style type="text/tailwindcss">
+        :root {
+            --zepto-blue: #0C2D57;
+            --zepto-yellow: #FFD700;
+            --zepto-light-bg: #F8F4E9;
+            --zepto-manage-blue: #4A7B9D;
+            --zepto-order-red: #D5715C;
+            --zepto-green: #10B981;
+            --zepto-gray: #6B7280;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--zepto-light-bg);
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        
+        /* Custom animations */
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        /* Product card hover effects */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Custom styling for options */
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .option-button {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .option-button.active {
+            border-color: var(--zepto-blue);
+            background-color: rgba(12, 45, 87, 0.05);
+            color: var(--zepto-blue);
+        }
+        
+        .option-button:hover:not(.active) {
+            border-color: #9ca3af;
+        }
+        
+        .price-display {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--zepto-blue);
+        }
+        
+        .special-badge {
+            display: inline-block;
+            background-color: var(--zepto-yellow);
+            color: var(--zepto-blue);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .availability-badge {
+            display: inline-block;
+            background-color: var(--zepto-green);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .weight-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding: 8px 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .weight-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .weight-label {
+            font-size: 12px;
+            color: var(--zepto-gray);
+        }
+        
+        .weight-value {
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        /* Quantity selector styles */
+        .quantity-selector {
+            margin-top: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .quantity-label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--zepto-gray);
+        }
+        
+        .quantity-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .quantity-option {
+            padding: 10px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            position: relative;
+        }
+        
+        .quantity-option.active {
+            border-color: var(--zepto-blue);
+            background-color: rgba(12, 45, 87, 0.05);
+            color: var(--zepto-blue);
+        }
+        
+        .quantity-option:hover:not(.active) {
+            border-color: #9ca3af;
+        }
+        
+        .quantity-option.low-stock {
+            border-color: #f59e0b;
+        }
+        
+        .quantity-option.out-of-stock {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .stock-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--zepto-green);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .stock-badge.low {
+            background-color: #f59e0b;
+        }
+        
+        .stock-badge.out {
+            background-color: var(--zepto-order-red);
+        }
+        
+        .total-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--zepto-blue);
+            margin-top: 8px;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--zepto-green);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toast.error {
+            background-color: var(--zepto-order-red);
+        }
+        
+        /* Meat type selector */
+        .meat-type-selector {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .meat-type-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--zepto-gray);
+        }
+        
+        .meat-type-option.active {
+            background-color: var(--zepto-blue);
+            color: white;
+        }
+        
+        /* Mutton-specific styles */
+        .mutton-part-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .mutton-part-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mutton-part-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(12, 45, 87, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mutton-part-icon span {
+            font-size: 32px;
+            color: var(--zepto-blue);
+        }
+        
+        .mutton-part-details {
+            flex: 1;
+        }
+        
+        .mutton-part-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--zepto-blue);
+            margin-bottom: 4px;
+        }
+        
+        .mutton-part-price {
+            font-size: 14px;
+            color: var(--zepto-blue);
+            font-weight: 500;
+        }
+        
+        .book-btn {
+            background-color: var(--zepto-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .book-btn:hover {
+            background-color: #0a2445;
+        }
+        
+        .book-btn:disabled {
+            background-color: var(--zepto-gray);
+            cursor: not-allowed;
+        }
+        
+        .sunday-selector {
+            margin-bottom: 20px;
+        }
+        
+        .sunday-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 14px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%230C2D57' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+        
+        .booking-info {
+            background-color: rgba(12, 45, 87, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: var(--zepto-blue);
+            border-left: 4px solid var(--zepto-blue);
+        }
+        
+        .animal-selection {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .animal-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .animal-option.active {
+            border-color: var(--zepto-blue);
+            background-color: rgba(12, 45, 87, 0.05);
+        }
+        
+        .animal-option:hover:not(.active) {
+            border-color: #9ca3af;
+        }
+        
+        .animal-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: var(--zepto-blue);
+        }
+        
+        .animal-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--zepto-blue);
+        }
+        
+        .part-weight {
+            font-size: 12px;
+            color: var(--zepto-gray);
+            margin-top: 4px;
+        }
+        
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-[var(--zepto-blue)] text-white p-4 sticky top-0 z-20 shadow-md">
+            <div class="flex justify-between items-center">
+                <button class="text-white p-2 rounded-full hover:bg-white/10 transition-colors" onclick="goBack()"
+                    aria-label="Go back">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="text-xl font-semibold">Order Fresh Meat</h1>
+                <div class="flex items-center gap-3">
+                    <!-- Cart Icon -->
+                    <a href="../cart/cart.html" class="relative p-2 rounded-full hover:bg-white/10 transition-colors"
+                        aria-label="Cart">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span id="cartCount"
+                            class="absolute -top-1 -right-1 bg-[var(--zepto-yellow)] text-[var(--zepto-blue)] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                    <!-- Profile Icon -->
+                    <a href="../profile/1-profile.html"
+                        class="relative p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Profile">
+                        <span class="material-symbols-outlined">person</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow p-4 slide-up">
+            <!-- Meat Type Selector -->
+            <div class="meat-type-selector">
+                <div class="meat-type-option active" data-type="chicken">
+                    <span>🍗 Chicken</span>
+                </div>
+                <div class="meat-type-option" data-type="mutton">
+                    <span>🐑 Mutton</span>
+                </div>
+            </div>
+
+            <!-- Chicken Content -->
+            <div id="chicken-content" class="content-section active">
+                <div class="space-y-6">
+                    <!-- Regular Chicken Card -->
+                    <div class="product-card bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <img alt="Regular Chicken" class="w-full h-48 object-cover rounded-lg mb-4"
+                            src="https://images.unsplash.com/photo-1587332278432-1698f5dd1c0b?auto=format&fit=crop&w=600&q=80" />
+                        <div class="p-2">
+                            <h2 class="text-lg font-bold text-gray-800">Regular Chicken</h2>
+                            <p class="text-sm text-gray-600 mt-1">Freshly cut to your preference</p>
+
+                            <!-- Quantity Selection -->
+                            <div class="quantity-selector">
+                                <div class="quantity-label">Select Quantity (KG):</div>
+                                <div class="quantity-options">
+                                    <div class="quantity-option active" data-quantity="0.5">0.5 KG</div>
+                                    <div class="quantity-option" data-quantity="0.75">0.75 KG</div>
+                                    <div class="quantity-option" data-quantity="1.00">1.00 KG</div>
+                                    <div class="quantity-option" data-quantity="1.25">1.25 KG</div>
+                                    <div class="quantity-option" data-quantity="1.50">1.50 KG</div>
+                                    <div class="quantity-option" data-quantity="1.75">1.75 KG</div>
+                                    <div class="quantity-option" data-quantity="2.00">2.00 KG</div>
+                                </div>
+                            </div>
+
+                            <!-- Cut Type Selection -->
+                            <div class="mt-4">
+                                <h3 class="text-base font-semibold">Select Cut Type</h3>
+                                <div class="option-group">
+                                    <button class="option-button active" data-cut="curry">Curry Cut</button>
+                                    <button class="option-button" data-cut="biryani">Biryani Cut</button>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Price Display -->
+                            <div class="mt-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Price per kg</p>
+                                        <p class="price-display">₹249</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm text-gray-500">Total</p>
+                                        <p class="total-price" id="chickenTotalPrice">₹124.50</p>
+                                    </div>
+                                </div>
+                                <button onclick="addRegularToCart()"
+                                    class="mt-4 w-full bg-[var(--zepto-yellow)] text-[var(--zepto-blue)] font-bold py-2 px-6 rounded-lg text-center hover:bg-yellow-500 transition-all duration-200">
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                            <p class="text-sm text-gray-600 mt-3">
+                                We humanely process the chicken after you order, ensuring maximum freshness. Delivered
+                                ready to cook.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Country Chicken Card -->
+                    <div class="product-card bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <!-- Live Chicken Photo -->
+                        <div class="mt-4">
+                            <h3 class="text-base font-semibold mb-2">Live Chicken</h3>
+                            <img alt="Live Country Chicken" class="w-full h-48 object-cover rounded-lg"
+                                src="https://images.unsplash.com/photo-1559622211-77efc0af3046?auto=format&fit=crop&w=600&q=80" />
+                            <div class="weight-info">
+                                <div class="weight-item">
+                                    <div class="weight-label">Live Weight</div>
+                                    <div class="weight-value">2.2 kg</div>
+                                </div>
+                                <div class="weight-item">
+                                    <div class="weight-label">After Cut</div>
+                                    <div class="weight-value">1.5 kg</div>
+                                </div>
+                                <div class="weight-item">
+                                    <div class="weight-label">Price</div>
+                                    <div class="weight-value">₹750</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-2">
+                            <h2 class="text-lg font-bold text-gray-800">Country Chicken <span
+                                    class="special-badge">Special</span></h2>
+                            <p class="text-sm text-gray-600 mt-1">Free-range, naturally raised</p>
+
+                            <!-- Availability Status -->
+                            <div class="mt-2">
+                                <span class="availability-badge">Available</span>
+                            </div>
+
+                            <!-- Cut Type Selection -->
+                            <div class="mt-4">
+                                <h3 class="text-base font-semibold">Select Cut Type</h3>
+                                <div class="option-group">
+                                    <button class="option-button active" data-cut="curry">Curry Cut</button>
+                                    <button class="option-button" data-cut="biryani">Biryani Cut</button>
+                                </div>
+                            </div>
+
+                            <!-- Fixed Price -->
+                            <div class="mt-4 flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-gray-500">Total Price</p>
+                                    <p class="price-display">₹750</p>
+                                </div>
+                                <button onclick="addCountryToCart()"
+                                    class="bg-[var(--zepto-yellow)] text-[var(--zepto-blue)] font-bold py-2 px-6 rounded-lg text-center hover:bg-yellow-500 transition-all duration-200">
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                            <p class="text-sm text-gray-600 mt-3">
+                                Our country chickens are free-range and naturally raised, resulting in leaner, more
+                                flavorful meat.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mutton Content -->
+            <div id="mutton-content" class="content-section">
+                <div class="space-y-6">
+                    <!-- Booking Information -->
+                    <div class="booking-info">
+                        <p><strong>Pre-booking Information:</strong> Orders open every Monday and close Saturday at 6 PM
+                            for the following Sunday delivery.</p>
+                    </div>
+
+                    <!-- Animal Selection -->
+                    <div class="animal-selection">
+                        <div class="animal-option active" data-animal="sheep">
+                            <div class="animal-icon">🐑</div>
+                            <div class="animal-name">Sheep Mutton</div>
+                            <div class="part-weight">₹550/kg</div>
+                        </div>
+                        <div class="animal-option" data-animal="goat">
+                            <div class="animal-icon">🐐</div>
+                            <div class="animal-name">Goat Mutton</div>
+                            <div class="part-weight">₹600/kg</div>
+                        </div>
+                    </div>
+
+                    <!-- Mutton Card -->
+                    <div class="product-card bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <img alt="Fresh Mutton" class="w-full h-48 object-cover rounded-lg mb-4"
+                            src="https://images.unsplash.com/photo-1625943553837-200349d1f78d?auto=format&fit=crop&w=600&q=80" />
+                        <div class="p-2">
+                            <h2 class="text-lg font-bold text-gray-800" id="animalTitle">Sheep Mutton <span
+                                    class="special-badge">Premium</span></h2>
+                            <p class="text-sm text-gray-600 mt-1">Freshly cut to your preference. Known for its rich
+                                flavor and tender meat, perfect for traditional curries.</p>
+
+                            <!-- Availability Status -->
+                            <div class="mt-2">
+                                <span class="availability-badge">In Stock</span>
+                            </div>
+
+                            <!-- Sunday Selection -->
+                            <div class="sunday-selector mt-4">
+                                <label class="quantity-label" for="sunday-select">Select Your Sunday</label>
+                                <select class="sunday-select" id="sunday-select">
+                                    <option>Sunday, July 21</option>
+                                    <option>Sunday, July 28</option>
+                                    <option>Sunday, August 4</option>
+                                </select>
+                            </div>
+
+                            <!-- Quantity Selection -->
+                            <div class="quantity-selector">
+                                <div class="quantity-label">Select Quantity (KG):</div>
+                                <div class="quantity-options">
+                                    <div class="quantity-option active" data-quantity="0.5">0.5 KG</div>
+                                    <div class="quantity-option" data-quantity="0.75">0.75 KG</div>
+                                    <div class="quantity-option" data-quantity="1.00">1.00 KG</div>
+                                    <div class="quantity-option" data-quantity="1.25">1.25 KG</div>
+                                    <div class="quantity-option" data-quantity="1.50">1.50 KG</div>
+                                    <div class="quantity-option" data-quantity="1.75">1.75 KG</div>
+                                    <div class="quantity-option" data-quantity="2.00">2.00 KG</div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Price Display -->
+                            <div class="mt-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Price per kg</p>
+                                        <p class="price-display" id="pricePerKg">₹550</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm text-gray-500">Total</p>
+                                        <p class="total-price" id="muttonTotalPrice">₹275.00</p>
+                                    </div>
+                                </div>
+                                <button onclick="addMuttonToCart()"
+                                    class="mt-4 w-full bg-[var(--zepto-yellow)] text-[var(--zepto-blue)] font-bold py-2 px-6 rounded-lg text-center hover:bg-yellow-500 transition-all duration-200">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specific Mutton Parts Section -->
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Specific Mutton Parts</h3>
+                        <p class="text-sm text-gray-600 mb-4">We sell the whole animal. Each part has an approximate
+                            weight.</p>
+
+                        <!-- Liver -->
+                        <div class="mutton-part-card">
+                            <div class="mutton-part-icon">
+                                <span class="material-symbols-outlined">graphic_eq</span>
+                            </div>
+                            <div class="mutton-part-details">
+                                <div class="mutton-part-name">Liver</div>
+                                <div class="mutton-part-price">₹350/kg</div>
+                                <div class="part-weight">Approx. 0.8-1.2 kg per animal</div>
+                            </div>
+                            <button class="book-btn" onclick="bookPart('liver')">Book This Part</button>
+                        </div>
+
+                        <!-- Kapura -->
+                        <div class="mutton-part-card">
+                            <div class="mutton-part-icon">
+                                <span class="material-symbols-outlined">egg</span>
+                            </div>
+                            <div class="mutton-part-details">
+                                <div class="mutton-part-name">Kapura</div>
+                                <div class="mutton-part-price">₹400/kg</div>
+                                <div class="part-weight">Approx. 0.5-0.7 kg per animal</div>
+                            </div>
+                            <button class="book-btn" onclick="bookPart('kapura')">Book This Part</button>
+                        </div>
+
+                        <!-- Heart -->
+                        <div class="mutton-part-card">
+                            <div class="mutton-part-icon">
+                                <span class="material-symbols-outlined">favorite</span>
+                            </div>
+                            <div class="mutton-part-details">
+                                <div class="mutton-part-name">Heart</div>
+                                <div class="mutton-part-price">₹300/piece</div>
+                                <div class="part-weight">1 piece per animal</div>
+                            </div>
+                            <button class="book-btn" onclick="bookPart('heart')">Book This Part</button>
+                        </div>
+
+                        <!-- Head with Legs -->
+                        <div class="mutton-part-card">
+                            <div class="mutton-part-icon">
+                                <span class="material-symbols-outlined">pets</span>
+                            </div>
+                            <div class="mutton-part-details">
+                                <div class="mutton-part-name">Head with Legs</div>
+                                <div class="mutton-part-price">₹600/set</div>
+                                <div class="part-weight">1 set per animal</div>
+                            </div>
+                            <button class="book-btn" onclick="bookPart('headLegs')">Book This Part</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Navigation function
+        function goBack() {
+            window.history.back();
+        }
+
+        // Meat type selector functionality
+        function initializeMeatTypeSelector() {
+            const meatTypeOptions = document.querySelectorAll('.meat-type-option');
+            const chickenContent = document.getElementById('chicken-content');
+            const muttonContent = document.getElementById('mutton-content');
+
+            meatTypeOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    // Remove active class from all options
+                    meatTypeOptions.forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+
+                    // Add active class to selected option
+                    this.classList.add('active');
+
+                    // Get the selected type
+                    const type = this.getAttribute('data-type');
+
+                    // Show the corresponding content
+                    if (type === 'chicken') {
+                        chickenContent.classList.add('active');
+                        muttonContent.classList.remove('active');
+                    } else {
+                        chickenContent.classList.remove('active');
+                        muttonContent.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Initialize option buttons
+        function initializeOptionButtons() {
+            // Option button functionality
+            document.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.option-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // Initialize quantity selector for regular chicken
+        function initializeChickenQuantitySelector() {
+            const quantityOptions = document.querySelectorAll('#chicken-content .quantity-option');
+            const totalPrice = document.getElementById('chickenTotalPrice');
+
+            const pricePerKg = 249;
+
+            // Update total price when quantity changes
+            function updateTotalPrice(quantity) {
+                const total = quantity * pricePerKg;
+                totalPrice.textContent = `₹${total.toFixed(2)}`;
+            }
+
+            // Handle quantity selection
+            quantityOptions.forEach(option => {
+                if (!option.classList.contains('out-of-stock')) {
+                    option.addEventListener('click', function () {
+                        // Remove active class from all options
+                        quantityOptions.forEach(opt => {
+                            if (!opt.classList.contains('out-of-stock')) {
+                                opt.classList.remove('active');
+                            }
+                        });
+
+                        // Add active class to selected option
+                        this.classList.add('active');
+
+                        // Get the quantity value
+                        const quantity = parseFloat(this.getAttribute('data-quantity'));
+
+                        // Update total price
+                        updateTotalPrice(quantity);
+                    });
+                }
+            });
+
+            // Initialize with default quantity (0.5 KG)
+            updateTotalPrice(0.5);
+        }
+
+        // Animal selection for mutton
+        function initializeAnimalSelection() {
+            const animalOptions = document.querySelectorAll('.animal-option');
+
+            animalOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    // Remove active class from all options
+                    animalOptions.forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+
+                    // Add active class to selected option
+                    this.classList.add('active');
+
+                    // Update the page based on selection
+                    const animal = this.getAttribute('data-animal');
+                    updateAnimalSelection(animal);
+                });
+            });
+        }
+
+        function updateAnimalSelection(animal) {
+            const title = document.getElementById('animalTitle');
+            const pricePerKg = document.getElementById('pricePerKg');
+            const totalPrice = document.getElementById('muttonTotalPrice');
+            const quantityOption = document.querySelector('#mutton-content .quantity-option.active');
+            const quantity = parseFloat(quantityOption.getAttribute('data-quantity'));
+
+            if (animal === 'sheep') {
+                title.innerHTML = 'Sheep Mutton <span class="special-badge">Premium</span>';
+                pricePerKg.textContent = '₹550';
+                updateMuttonTotalPrice(quantity, 550);
+            } else {
+                title.innerHTML = 'Goat Mutton <span class="special-badge">Premium</span>';
+                pricePerKg.textContent = '₹600';
+                updateMuttonTotalPrice(quantity, 600);
+            }
+        }
+
+        // Initialize quantity selector for mutton
+        function initializeMuttonQuantitySelector() {
+            const quantityOptions = document.querySelectorAll('#mutton-content .quantity-option');
+            const totalPrice = document.getElementById('muttonTotalPrice');
+
+            let pricePerKg = 550; // Default to sheep price
+
+            // Update total price when quantity changes
+            function updateMuttonTotalPrice(quantity, price = pricePerKg) {
+                const total = quantity * price;
+                totalPrice.textContent = `₹${total.toFixed(2)}`;
+            }
+
+            // Handle quantity selection
+            quantityOptions.forEach(option => {
+                if (!option.classList.contains('out-of-stock')) {
+                    option.addEventListener('click', function () {
+                        // Remove active class from all options
+                        quantityOptions.forEach(opt => {
+                            if (!opt.classList.contains('out-of-stock')) {
+                                opt.classList.remove('active');
+                            }
+                        });
+
+                        // Add active class to selected option
+                        this.classList.add('active');
+
+                        // Get the quantity value
+                        const quantity = parseFloat(this.getAttribute('data-quantity'));
+
+                        // Get current animal selection
+                        const activeAnimal = document.querySelector('.animal-option.active');
+                        const animal = activeAnimal.getAttribute('data-animal');
+                        const price = animal === 'sheep' ? 550 : 600;
+
+                        // Update total price
+                        updateMuttonTotalPrice(quantity, price);
+                    });
+                }
+            });
+
+            // Initialize with default quantity (0.5 KG)
+            updateMuttonTotalPrice(0.5);
+        }
+
+        // Book part function
+        function bookPart(partId) {
+            const partName = document.querySelector(`[onclick="bookPart('${partId}')"]`).closest('.mutton-part-card').querySelector('.mutton-part-name').textContent;
+            const priceText = document.querySelector(`[onclick="bookPart('${partId}')"]`).closest('.mutton-part-card').querySelector('.mutton-part-price').textContent;
+            const weightInfo = document.querySelector(`[onclick="bookPart('${partId}')"]`).closest('.mutton-part-card').querySelector('.part-weight').textContent;
+
+            // Extract price from text (could be ₹350/kg, ₹300/piece, etc.)
+            const priceMatch = priceText.match(/₹(\d+)/);
+            const price = priceMatch ? parseInt(priceMatch[1]) : 0;
+
+            const name = `${partName} (${weightInfo})`;
+
+            addToCart(name, price, partId, 1);
+        }
+
+        // Add to cart functions
+        function addRegularToCart() {
+            const cut = document.querySelector('#chicken-content [data-cut].active').dataset.cut;
+            const quantityOption = document.querySelector('#chicken-content .quantity-option.active');
+            const quantity = parseFloat(quantityOption.getAttribute('data-quantity'));
+            const name = `Regular Chicken (${cut} cut)`;
+            const price = 249 * quantity;
+
+            addToCart(name, price, 'regular-chicken', quantity);
+        }
+
+        function addCountryToCart() {
+            const cut = document.querySelector('#chicken-content [data-cut].active').dataset.cut;
+            const name = `Country Chicken (${cut} cut)`;
+            const price = 750;
+
+            addToCart(name, price, 'country-chicken', 1);
+        }
+
+        function addMuttonToCart() {
+            const quantityOption = document.querySelector('#mutton-content .quantity-option.active');
+            const quantity = parseFloat(quantityOption.getAttribute('data-quantity'));
+            const sunday = document.getElementById('sunday-select').value;
+            const activeAnimal = document.querySelector('.animal-option.active');
+            const animal = activeAnimal.getAttribute('data-animal');
+            const pricePerKg = animal === 'sheep' ? 550 : 600;
+            const name = `${animal === 'sheep' ? 'Sheep' : 'Goat'} Mutton (${sunday})`;
+            const price = pricePerKg * quantity;
+
+            addToCart(name, price, 'mutton', quantity);
+        }
+
+        // Generic add to cart function
+        function addToCart(name, price, id, quantity) {
+            // Get existing cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Check if item already exists in cart
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+
+            if (existingItemIndex > -1) {
+                // Update quantity if item exists
+                cart[existingItemIndex].quantity += quantity;
+                cart[existingItemIndex].totalPrice = cart[existingItemIndex].price * cart[existingItemIndex].quantity;
+            } else {
+                // Add new item to cart
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: price / quantity, // Price per unit
+                    quantity: quantity,
+                    totalPrice: price
+                });
+            }
+
+            // Save updated cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Update cart count
+            updateCartCount();
+
+            // Show success message
+            showToast(`${name} added to cart!`);
+        }
+
+        // Update cart count in header
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            // Remove existing toast if any
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.innerHTML = `
+                <span class="material-symbols-outlined">${isError ? 'error' : 'check_circle'}</span>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeMeatTypeSelector();
+            initializeOptionButtons();
+            initializeChickenQuantitySelector();
+            initializeAnimalSelection();
+            initializeMuttonQuantitySelector();
+            updateCartCount();
+        });
+    </script>
+</body>
+
+</html>
