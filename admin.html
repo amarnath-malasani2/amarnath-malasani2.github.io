@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshGrocer - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --zepto-blue: #0C2D57;
+            --zepto-yellow: #FFD700;
+            --zepto-green: #10B981;
+            --zepto-red: #D5715C;
+            --zepto-gray: #6B7280;
+            --zepto-light: #F8F4E9;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .sidebar {
+            transition: all 0.3s ease;
+            background: var(--zepto-blue);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+
+        .main-content {
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .table-row {
+            transition: background-color 0.2s ease;
+        }
+
+        .table-row:hover {
+            background-color: rgba(12, 45, 87, 0.05);
+        }
+
+        .chart-bar {
+            animation: growBar 1s ease-out;
+        }
+
+        @keyframes growBar {
+            from {
+                height: 0;
+            }
+
+            to {
+                height: 100%;
+            }
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ef4444;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--zepto-blue);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar .nav-text {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .stat-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="sidebar w-64">
+            <div class="p-4 flex items-center justify-between border-b border-blue-700 h-16">
+                <div class="flex items-center">
+                    <div
+                        class="w-10 h-10 rounded-full bg-zepto-yellow flex items-center justify-center text-zepto-blue font-bold text-xl">
+                        T
+                    </div>
+                    <h1 class="text-xl font-bold ml-3 nav-text">Taaza Admin</h1>
+                </div>
+                <button id="sidebar-toggle" class="text-white p-1 rounded hover:bg-blue-700">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
+
+            <nav class="mt-6 px-3">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" class="nav-item active flex items-center p-3 rounded-lg text-white"
+                            data-page="dashboard">
+                            <span class="material-symbols-outlined">dashboard</span>
+                            <span class="ml-3 nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white" data-page="orders">
+                            <span class="material-symbols-outlined">shopping_cart</span>
+                            <span class="ml-3 nav-text">Orders</span>
+                            <span
+                                class="ml-auto bg-zepto-yellow text-zepto-blue text-xs font-bold rounded-full px-2 py-1 nav-text">24</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white" data-page="products">
+                            <span class="material-symbols-outlined">inventory</span>
+                            <span class="ml-3 nav-text">Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white" data-page="delivery">
+                            <span class="material-symbols-outlined">local_shipping</span>
+                            <span class="ml-3 nav-text">Delivery</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white" data-page="customers">
+                            <span class="material-symbols-outlined">groups</span>
+                            <span class="ml-3 nav-text">Customers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white"
+                            data-page="subscriptions">
+                            <span class="material-symbols-outlined">receipt_long</span>
+                            <span class="ml-3 nav-text">Subscriptions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white" data-page="analytics">
+                            <span class="material-symbols-outlined">analytics</span>
+                            <span class="ml-3 nav-text">Analytics</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center p-3 rounded-lg text-white" data-page="settings">
+                            <span class="material-symbols-outlined">settings</span>
+                            <span class="ml-3 nav-text">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 w-full p-4 border-t border-blue-700">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-gray-600">person</span>
+                    </div>
+                    <div class="ml-3 nav-text">
+                        <p class="font-medium">Admin User</p>
+                        <p class="text-sm text-blue-200">admin@freshgrocer.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content ml-64 w-full">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm p-4 sticky top-0 z-10">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-zepto-blue" id="page-title">Dashboard</h1>
+                        <p class="text-gray-600" id="page-description">Welcome back, Admin! Here's what's happening
+                            today.</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="p-2 rounded-full hover:bg-gray-100 relative">
+                                <span class="material-symbols-outlined">notifications</span>
+                                <span class="notification-dot"></span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button class="p-2 rounded-full hover:bg-gray-100">
+                                <span class="material-symbols-outlined">mail</span>
+                            </button>
+                            <span
+                                class="absolute top-0 right-0 bg-zepto-yellow text-zepto-blue text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-gray-600">person</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Dashboard Content -->
+            <main class="p-6" id="main-content">
+                <!-- Dashboard Content -->
+                <div id="dashboard-content">
+                    <!-- Stats Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-500">Total Orders</p>
+                                    <h3 class="text-3xl font-bold mt-2">1,247</h3>
+                                    <p class="text-green-500 text-sm mt-1 flex items-center">
+                                        <span class="material-symbols-outlined text-base mr-1">trending_up</span>
+                                        +12.5% from last month
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-full bg-green-100 text-green-500">
+                                    <span class="material-symbols-outlined">shopping_cart</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-blue-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-500">Active Subscriptions</p>
+                                    <h3 class="text-3xl font-bold mt-2">342</h3>
+                                    <p class="text-blue-500 text-sm mt-1 flex items-center">
+                                        <span class="material-symbols-outlined text-base mr-1">trending_up</span>
+                                        +8.2% from last month
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-500">
+                                    <span class="material-symbols-outlined">receipt_long</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-yellow-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-500">Revenue</p>
+                                    <h3 class="text-3xl font-bold mt-2">₹2,84,760</h3>
+                                    <p class="text-yellow-500 text-sm mt-1 flex items-center">
+                                        <span class="material-symbols-outlined text-base mr-1">trending_up</span>
+                                        +15.3% from last month
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-500">
+                                    <span class="material-symbols-outlined">payments</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-red-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-500">Pending Deliveries</p>
+                                    <h3 class="text-3xl font-bold mt-2">47</h3>
+                                    <p class="text-red-500 text-sm mt-1 flex items-center">
+                                        <span class="material-symbols-outlined text-base mr-1">warning</span>
+                                        5 need immediate attention
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-full bg-red-100 text-red-500">
+                                    <span class="material-symbols-outlined">local_shipping</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Recent Activity -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <!-- Revenue Chart -->
+                        <div class="lg:col-span-2 bg-white rounded-xl shadow p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-zepto-blue">Revenue Overview</h2>
+                                <div class="flex space-x-2">
+                                    <button
+                                        class="px-3 py-1 text-sm rounded-lg bg-zepto-blue text-white">Monthly</button>
+                                    <button
+                                        class="px-3 py-1 text-sm rounded-lg border border-gray-300">Quarterly</button>
+                                    <button class="px-3 py-1 text-sm rounded-lg border border-gray-300">Yearly</button>
+                                </div>
+                            </div>
+                            <div class="h-64 flex items-end justify-between pt-4 px-4">
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 80%"></div>
+                                    <span class="text-xs mt-1">Jan</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 65%"></div>
+                                    <span class="text-xs mt-1">Feb</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 90%"></div>
+                                    <span class="text-xs mt-1">Mar</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 75%"></div>
+                                    <span class="text-xs mt-1">Apr</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 95%"></div>
+                                    <span class="text-xs mt-1">May</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 100%"></div>
+                                    <span class="text-xs mt-1">Jun</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end">
+                                    <div class="w-8 bg-zepto-blue rounded-t chart-bar" style="height: 85%"></div>
+                                    <span class="text-xs mt-1">Jul</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h2 class="text-xl font-bold text-zepto-blue mb-6">Recent Activity</h2>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="p-2 rounded-full bg-green-100 text-green-500 mr-3">
+                                        <span class="material-symbols-outlined text-sm">shopping_cart</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">New order #ORD-12876</p>
+                                        <p class="text-gray-500 text-sm">Customer: Ravi Kumar • 5 min ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="p-2 rounded-full bg-blue-100 text-blue-500 mr-3">
+                                        <span class="material-symbols-outlined text-sm">person_add</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">New customer registered</p>
+                                        <p class="text-gray-500 text-sm">Priya Sharma • 1 hour ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="p-2 rounded-full bg-yellow-100 text-yellow-500 mr-3">
+                                        <span class="material-symbols-outlined text-sm">receipt_long</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Milk subscription renewed</p>
+                                        <p class="text-gray-500 text-sm">Customer: Anil Patel • 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="p-2 rounded-full bg-red-100 text-red-500 mr-3">
+                                        <span class="material-symbols-outlined text-sm">local_shipping</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Delivery issue reported</p>
+                                        <p class="text-gray-500 text-sm">Order #ORD-12865 • 3 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="p-2 rounded-full bg-purple-100 text-purple-500 mr-3">
+                                        <span class="material-symbols-outlined text-sm">inventory</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Low stock alert: Chicken</p>
+                                        <p class="text-gray-500 text-sm">Only 15kg remaining • 5 hours ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-full mt-4 text-zepto-blue font-medium flex items-center justify-center">
+                                View All Activity
+                                <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Table -->
+                    <div class="bg-white rounded-xl shadow p-6 mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-zepto-blue">Recent Orders</h2>
+                            <button class="px-4 py-2 bg-zepto-blue text-white rounded-lg flex items-center">
+                                <span class="material-symbols-outlined mr-2">download</span>
+                                Export
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-3 px-4 font-medium">Order ID</th>
+                                        <th class="text-left py-3 px-4 font-medium">Customer</th>
+                                        <th class="text-left py-3 px-4 font-medium">Date</th>
+                                        <th class="text-left py-3 px-4 font-medium">Amount</th>
+                                        <th class="text-left py-3 px-4 font-medium">Status</th>
+                                        <th class="text-left py-3 px-4 font-medium">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12876</td>
+                                        <td class="py-3 px-4">Ravi Kumar</td>
+                                        <td class="py-3 px-4">Today, 10:30 AM</td>
+                                        <td class="py-3 px-4">₹1,847</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Processing</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12875</td>
+                                        <td class="py-3 px-4">Priya Sharma</td>
+                                        <td class="py-3 px-4">Today, 9:15 AM</td>
+                                        <td class="py-3 px-4">₹2,350</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Delivered</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12874</td>
+                                        <td class="py-3 px-4">Anil Patel</td>
+                                        <td class="py-3 px-4">Yesterday, 4:20 PM</td>
+                                        <td class="py-3 px-4">₹3,120</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Shipped</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12873</td>
+                                        <td class="py-3 px-4">Sneha Reddy</td>
+                                        <td class="py-3 px-4">Yesterday, 2:45 PM</td>
+                                        <td class="py-3 px-4">₹1,560</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Cancelled</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="py-3 px-4">#ORD-12872</td>
+                                        <td class="py-3 px-4">Mohammed Khan</td>
+                                        <td class="py-3 px-4">Yesterday, 11:30 AM</td>
+                                        <td class="py-3 px-4">₹2,890</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Delivered</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-gray-600">Showing 5 of 1,247 orders</p>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg flex items-center">
+                                View All Orders
+                                <span class="material-symbols-outlined ml-2">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div
+                            class="bg-white rounded-xl shadow p-6 text-center cursor-pointer hover:shadow-md transition-shadow">
+                            <div
+                                class="w-12 h-12 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="material-symbols-outlined">add</span>
+                            </div>
+                            <h3 class="font-medium mb-1">Add Product</h3>
+                            <p class="text-gray-600 text-sm">Add new items to your catalog</p>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow p-6 text-center cursor-pointer hover:shadow-md transition-shadow">
+                            <div
+                                class="w-12 h-12 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="material-symbols-outlined">local_shipping</span>
+                            </div>
+                            <h3 class="font-medium mb-1">Manage Delivery</h3>
+                            <p class="text-gray-600 text-sm">Schedule and track deliveries</p>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow p-6 text-center cursor-pointer hover:shadow-md transition-shadow">
+                            <div
+                                class="w-12 h-12 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="material-symbols-outlined">campaign</span>
+                            </div>
+                            <h3 class="font-medium mb-1">Send Notification</h3>
+                            <p class="text-gray-600 text-sm">Notify customers about offers</p>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow p-6 text-center cursor-pointer hover:shadow-md transition-shadow">
+                            <div
+                                class="w-12 h-12 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="material-symbols-outlined">analytics</span>
+                            </div>
+                            <h3 class="font-medium mb-1">View Reports</h3>
+                            <p class="text-gray-600 text-sm">Generate sales and analytics reports</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Content -->
+                <div id="orders-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6 mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-zepto-blue">All Orders</h2>
+                            <div class="flex space-x-4">
+                                <button class="px-4 py-2 border border-gray-300 rounded-lg flex items-center">
+                                    <span class="material-symbols-outlined mr-2">filter_list</span>
+                                    Filter
+                                </button>
+                                <button class="px-4 py-2 bg-zepto-blue text-white rounded-lg flex items-center">
+                                    <span class="material-symbols-outlined mr-2">download</span>
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-3 px-4 font-medium">Order ID</th>
+                                        <th class="text-left py-3 px-4 font-medium">Customer</th>
+                                        <th class="text-left py-3 px-4 font-medium">Date</th>
+                                        <th class="text-left py-3 px-4 font-medium">Items</th>
+                                        <th class="text-left py-3 px-4 font-medium">Amount</th>
+                                        <th class="text-left py-3 px-4 font-medium">Status</th>
+                                        <th class="text-left py-3 px-4 font-medium">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12876</td>
+                                        <td class="py-3 px-4">Ravi Kumar</td>
+                                        <td class="py-3 px-4">Today, 10:30 AM</td>
+                                        <td class="py-3 px-4">8</td>
+                                        <td class="py-3 px-4">₹1,847</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Processing</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">View</button>
+                                            <button class="text-green-600 hover:underline">Process</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12875</td>
+                                        <td class="py-3 px-4">Priya Sharma</td>
+                                        <td class="py-3 px-4">Today, 9:15 AM</td>
+                                        <td class="py-3 px-4">12</td>
+                                        <td class="py-3 px-4">₹2,350</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Delivered</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12874</td>
+                                        <td class="py-3 px-4">Anil Patel</td>
+                                        <td class="py-3 px-4">Yesterday, 4:20 PM</td>
+                                        <td class="py-3 px-4">15</td>
+                                        <td class="py-3 px-4">₹3,120</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Shipped</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">View</button>
+                                            <button class="text-green-600 hover:underline">Track</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12873</td>
+                                        <td class="py-3 px-4">Sneha Reddy</td>
+                                        <td class="py-3 px-4">Yesterday, 2:45 PM</td>
+                                        <td class="py-3 px-4">6</td>
+                                        <td class="py-3 px-4">₹1,560</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Cancelled</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#ORD-12872</td>
+                                        <td class="py-3 px-4">Mohammed Khan</td>
+                                        <td class="py-3 px-4">Yesterday, 11:30 AM</td>
+                                        <td class="py-3 px-4">10</td>
+                                        <td class="py-3 px-4">₹2,890</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Delivered</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-gray-600">Showing 5 of 1,247 orders</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border border-gray-300 rounded">Previous</button>
+                                <button class="px-3 py-1 bg-zepto-blue text-white rounded">1</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded">2</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded">3</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Content -->
+                <div id="products-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6 mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-zepto-blue">Product Inventory</h2>
+                            <div class="flex space-x-4">
+                                <button class="px-4 py-2 border border-gray-300 rounded-lg flex items-center">
+                                    <span class="material-symbols-outlined mr-2">add</span>
+                                    Add Product
+                                </button>
+                                <button class="px-4 py-2 bg-zepto-blue text-white rounded-lg flex items-center">
+                                    <span class="material-symbols-outlined mr-2">download</span>
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-3 px-4 font-medium">Product ID</th>
+                                        <th class="text-left py-3 px-4 font-medium">Name</th>
+                                        <th class="text-left py-3 px-4 font-medium">Category</th>
+                                        <th class="text-left py-3 px-4 font-medium">Price</th>
+                                        <th class="text-left py-3 px-4 font-medium">Stock</th>
+                                        <th class="text-left py-3 px-4 font-medium">Status</th>
+                                        <th class="text-left py-3 px-4 font-medium">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#PRD-1001</td>
+                                        <td class="py-3 px-4">Fresh Milk (1L)</td>
+                                        <td class="py-3 px-4">Dairy</td>
+                                        <td class="py-3 px-4">₹60</td>
+                                        <td class="py-3 px-4">45</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">In
+                                                Stock</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">Edit</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#PRD-1002</td>
+                                        <td class="py-3 px-4">Organic Eggs (Dozen)</td>
+                                        <td class="py-3 px-4">Dairy</td>
+                                        <td class="py-3 px-4">₹120</td>
+                                        <td class="py-3 px-4">32</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">In
+                                                Stock</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">Edit</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#PRD-1003</td>
+                                        <td class="py-3 px-4">Chicken Breast (1kg)</td>
+                                        <td class="py-3 px-4">Meat</td>
+                                        <td class="py-3 px-4">₹350</td>
+                                        <td class="py-3 px-4">15</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Low
+                                                Stock</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">Edit</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row border-b border-gray-100">
+                                        <td class="py-3 px-4">#PRD-1004</td>
+                                        <td class="py-3 px-4">Bananas (1kg)</td>
+                                        <td class="py-3 px-4">Fruits</td>
+                                        <td class="py-3 px-4">₹50</td>
+                                        <td class="py-3 px-4">0</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Out
+                                                of Stock</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">Edit</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="py-3 px-4">#PRD-1005</td>
+                                        <td class="py-3 px-4">Whole Wheat Bread</td>
+                                        <td class="py-3 px-4">Bakery</td>
+                                        <td class="py-3 px-4">₹40</td>
+                                        <td class="py-3 px-4">28</td>
+                                        <td class="py-3 px-4">
+                                            <span
+                                                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">In
+                                                Stock</span>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <button class="text-zepto-blue hover:underline mr-2">Edit</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-gray-600">Showing 5 of 342 products</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border border-gray-300 rounded">Previous</button>
+                                <button class="px-3 py-1 bg-zepto-blue text-white rounded">1</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded">2</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded">3</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other page contents would go here -->
+                <div id="delivery-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-xl font-bold text-zepto-blue mb-6">Delivery Management</h2>
+                        <p class="text-gray-600">Delivery management content will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="customers-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-xl font-bold text-zepto-blue mb-6">Customer Management</h2>
+                        <p class="text-gray-600">Customer management content will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="subscriptions-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-xl font-bold text-zepto-blue mb-6">Subscription Management</h2>
+                        <p class="text-gray-600">Subscription management content will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="analytics-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-xl font-bold text-zepto-blue mb-6">Analytics & Reports</h2>
+                        <p class="text-gray-600">Analytics and reports content will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="settings-content" class="hidden">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-xl font-bold text-zepto-blue mb-6">Settings</h2>
+                        <p class="text-gray-600">Settings content will be displayed here.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Sidebar toggle functionality
+        document.getElementById('sidebar-toggle').addEventListener('click', function () {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '70px';
+            } else {
+                mainContent.style.marginLeft = '256px';
+            }
+        });
+
+        // Navigation functionality
+        const navItems = document.querySelectorAll('.nav-item');
+        const pageContents = document.querySelectorAll('[id$="-content"]');
+        const pageTitle = document.getElementById('page-title');
+        const pageDescription = document.getElementById('page-description');
+
+        // Page titles and descriptions
+        const pageData = {
+            'dashboard': {
+                title: 'Dashboard',
+                description: 'Welcome back, Admin! Here\'s what\'s happening today.'
+            },
+            'orders': {
+                title: 'Orders',
+                description: 'Manage and track customer orders.'
+            },
+            'products': {
+                title: 'Products',
+                description: 'Manage your product inventory and listings.'
+            },
+            'delivery': {
+                title: 'Delivery',
+                description: 'Schedule and track delivery operations.'
+            },
+            'customers': {
+                title: 'Customers',
+                description: 'View and manage customer information.'
+            },
+            'subscriptions': {
+                title: 'Subscriptions',
+                description: 'Manage customer subscription plans.'
+            },
+            'analytics': {
+                title: 'Analytics',
+                description: 'View business performance and insights.'
+            },
+            'settings': {
+                title: 'Settings',
+                description: 'Configure your store settings.'
+            }
+        };
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all nav items
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+
+                // Add active class to clicked nav item
+                this.classList.add('active');
+
+                // Get the page to show
+                const page = this.getAttribute('data-page');
+
+                // Hide all page contents
+                pageContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                // Show the selected page content
+                document.getElementById(`${page}-content`).classList.remove('hidden');
+
+                // Update page title and description
+                pageTitle.textContent = pageData[page].title;
+                pageDescription.textContent = pageData[page].description;
+
+                // Show toast notification
+                showToast(`Switched to ${pageData[page].title} page`);
+            });
+        });
+
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Stat card hover effects
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Quick action buttons
+        const quickActions = document.querySelectorAll('.grid > div');
+        quickActions.forEach(action => {
+            action.addEventListener('click', function () {
+                const title = this.querySelector('h3').textContent;
+                showToast(`${title} action triggered`);
+            });
+        });
+
+        // Table row hover effects
+        const tableRows = document.querySelectorAll('.table-row');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function () {
+                this.style.backgroundColor = 'rgba(12, 45, 87, 0.05)';
+            });
+
+            row.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = '';
+            });
+        });
+
+        // Responsive adjustments
+        function handleResize() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.add('collapsed');
+                mainContent.style.marginLeft = '70px';
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.style.marginLeft = '256px';
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call
+    </script>
+</body>
+
+</html>

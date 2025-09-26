@@ -263,13 +263,13 @@
                     <div id="nameError" class="error-message">Please enter a valid name</div>
                 </div>
 
-                <!-- Mobile Number Input -->
+
+                <!-- Email Input (Optional) -->
                 <div class="input-container">
-                    <input id="mobileNumber"
+                    <input id="emailAddress"
                         class="register-input form-input w-full rounded-lg h-12 sm:h-14 px-4 bg-input-dark border border-input-border-dark text-background-light placeholder-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
-                        placeholder="Enter your mobile number" type="tel" inputmode="tel" autocomplete="tel"
-                        maxlength="15" />
-                    <div id="mobileError" class="error-message">Please enter a valid mobile number</div>
+                        placeholder="Enter your email address (optional)" type="email" autocomplete="email"
+                        maxlength="50" />
                 </div>
 
                 <!-- Continue Button -->
@@ -296,42 +296,13 @@
                 nameInput.focus();
             }, 500);
 
-            // Get other elements
-            const mobileInput = document.getElementById('mobileNumber');
             const continueBtn = document.getElementById('continueBtn');
             const nameError = document.getElementById('nameError');
-            const mobileError = document.getElementById('mobileError');
 
-            // Validation functions
+            // Validation function for name
             function validateName(name) {
                 return name.length >= 2 && /^[a-zA-Z\s]+$/.test(name);
             }
-
-            function validateMobile(mobile) {
-                return /^[0-9]{10,15}$/.test(mobile.replace(/\D/g, ''));
-            }
-
-            // Format mobile number as user types
-            mobileInput.addEventListener('input', function (e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 10) value = value.slice(0, 10);
-
-                // Format with spaces for better readability
-                if (value.length > 6) {
-                    value = value.replace(/(\d{5})(\d{5})/, '$1 $2');
-                } else if (value.length > 5) {
-                    value = value.replace(/(\d{5})(\d+)/, '$1 $2');
-                }
-
-                e.target.value = value;
-
-                // Validate and show/hide error
-                if (value.length > 0 && !validateMobile(value)) {
-                    mobileError.style.display = 'block';
-                } else {
-                    mobileError.style.display = 'none';
-                }
-            });
 
             // Name validation
             nameInput.addEventListener('input', function (e) {
@@ -346,7 +317,7 @@
             continueBtn.addEventListener('click', function () {
                 // Validate inputs
                 const fullName = nameInput.value.trim();
-                const mobileNumber = mobileInput.value.replace(/\D/g, '');
+                const emailAddress = document.getElementById('emailAddress').value.trim();
 
                 let isValid = true;
 
@@ -359,13 +330,11 @@
                     nameError.style.display = 'none';
                 }
 
-                // Validate mobile
-                if (!mobileNumber || !validateMobile(mobileNumber)) {
-                    mobileError.style.display = 'block';
-                    if (isValid) mobileInput.focus();
-                    isValid = false;
-                } else {
-                    mobileError.style.display = 'none';
+                // Email is optional, but if provided, validate format
+                if (emailAddress && !/^\S+@\S+\.\S+$/.test(emailAddress)) {
+                    alert('Please enter a valid email address');
+                    document.getElementById('emailAddress').focus();
+                    return;
                 }
 
                 if (!isValid) return;
@@ -376,28 +345,17 @@
 
                 // Store user data
                 localStorage.setItem('taaza_user_name', fullName);
-                localStorage.setItem('taaza_mobile', mobileNumber);
+                if (emailAddress) localStorage.setItem('taaza_email', emailAddress);
 
                 // Simulate API call/processing
                 setTimeout(() => {
                     // Redirect to home page or next screen
-                    console.log('User registered:', {
-                        name: fullName,
-                        mobile: mobileNumber
-                    });
-                    console.log('Redirecting to home page...');
                     window.location.href = "6-Welcome to Taaza.html";
                 }, 1500);
             });
 
-            // Handle Enter key on inputs
+            // Handle Enter key on name input
             nameInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    mobileInput.focus();
-                }
-            });
-
-            mobileInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     continueBtn.click();
                 }

@@ -227,15 +227,19 @@
                 </p>
 
                 <h2 class="login-subtitle text-xl sm:text-2xl font-medium text-background-light mb-8 sm:mb-12">Enter
-                    Your Email</h2>
+                    Your Mobile Number</h2>
 
                 <div class="relative mb-6">
-                    <input
-                        class="login-input form-input w-full rounded-lg h-12 sm:h-14 px-4 bg-input-dark border border-input-border-dark text-background-light placeholder-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
-                        placeholder="Email Address" type="email" inputmode="email" autocomplete="email" />
+                    <div class="flex">
+                        <span
+                            class="flex items-center px-3 bg-input-dark border border-input-border-dark rounded-l-lg text-background-light">+91</span>
+                        <input id="mobileInput"
+                            class="login-input form-input w-full rounded-r-lg h-12 sm:h-14 px-4 bg-input-dark border border-input-border-dark text-background-light placeholder-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                            placeholder="Mobile Number" type="tel" inputmode="tel" autocomplete="tel" maxlength="10" />
+                    </div>
                 </div>
 
-                <button
+                <button id="sendOtpBtn"
                     class="login-button w-full bg-primary text-background-dark font-bold py-3 sm:py-4 rounded-lg text-base sm:text-lg hover:bg-opacity-90 transition-colors duration-300 shadow-lg">
                     Send OTP
                 </button>
@@ -251,31 +255,19 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Add event listener to the Send OTP button
-            const sendOtpBtn = document.querySelector('.login-button');
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
             sendOtpBtn.addEventListener('click', function () {
-                // Validate email input
-                const emailInput = document.querySelector('.login-input');
-                const email = emailInput.value.trim();
-
-                if (!email) {
-                    alert('Please enter your email address');
-                    emailInput.focus();
+                // Validate mobile input
+                const mobileInput = document.getElementById('mobileInput');
+                const mobile = mobileInput.value.trim();
+                if (!mobile || !/^\d{10}$/.test(mobile)) {
+                    alert('Please enter a valid 10-digit mobile number');
+                    mobileInput.focus();
                     return;
                 }
-
-                // Basic email validation
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('Please enter a valid email address');
-                    emailInput.focus();
-                    return;
-                }
-
-                // Store email in localStorage
-                localStorage.setItem('taaza_email', email);
-
+                // Store mobile in localStorage with country code
+                localStorage.setItem('taaza_mobile', '+91' + mobile);
                 // Redirect to OTP verification page
-                console.log('Redirecting to OTP verification page...');
                 window.location.href = "4-OTP Verification.html";
             });
         });
